@@ -3,7 +3,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import LyricsHomePage from './pages/LyricsHomePage';
 import NotFound from './pages/NotFound';
 
-// Import all song components
+// TNG
 import AskMama from './songs/AskMama';
 import ReturnPolicy from './songs/ReturnPolicy';
 import SharinLocation from './songs/SharinLocation';
@@ -14,8 +14,13 @@ import MissedMeOut from './songs/MissedMeOut';
 import YouCantTopThis from './songs/YouCantTopThis';
 import GirlDown from './songs/GirlDown';
 import OhThereItIs from './songs/OhThereItIs';
+//Georgia TSTT
 import IDoIDont from './songs/IDoIDont';
 import HairMeOut from './songs/HairMeOut';
+import CryMeARealtor from './songs/CryMeARealtor';
+import InContempt from './songs/InContempt';
+import YallCanWait from './songs/YallCanWait';
+//Other Artists
 import SantasOnPTO from './songs/SantasOnPTO';
 import HoldSecureEvacuate from './songs/HoldSecureEvacuate';
 
