@@ -56,6 +56,7 @@ export default function Navigation() {
             <a href="https://misterjk.com/link" className={getNavLinkClasses()}>Listen</a>
             <a href="https://misterjk.com/bts" className={getNavLinkClasses()}>BTS</a>
             <a href="/" className={getNavLinkClasses()}>Lyrics</a>
+            <a href="https://blog.misterjk.com" className={getNavLinkClasses()}>Blog</a>
           </div>
         </div>
       </div>
