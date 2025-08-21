@@ -58,8 +58,7 @@ Now cry me a closing, and I hope you lost it
 You want sympathy staged? Better call her sooner
 Or leave a voicemail for your realtor rumor
 
-This listing has expired. Bye.
-`;
+This listing has expired. Bye.`;
 
   const credits = (
     <>
