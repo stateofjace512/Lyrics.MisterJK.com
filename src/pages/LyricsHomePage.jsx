@@ -19,26 +19,6 @@ export default function LyricsHomePage() {
       ],
     },
     {
-      title: "I Do (I Don't)",
-      artist: 'Georgia Wixen',
-      date: '8/10/2025',
-      cover: 'https://s3.amazonaws.com/gather.fandalism.com/800x800%2D9759764%2D%2D5889D19C%2DF5B1%2D4BE6%2DBDBCB5BE5D86238A%2D%2D0%2D%2D9283746%2D%2Dididpromocover8%2E11%2E25%2Ejpg',
-      alt: "I Do (I Don't) cover",
-      songs: [
-        { title: "I Do (I Don't)", slug: 'i-do-i-dont', artist: 'Georgia Wixen' }
-      ],
-    },
-    {
-      title: 'Hair Me Out',
-      artist: 'Georgia Wixen',
-      date: '8/8/2025',
-      cover: 'https://s3.amazonaws.com/gather.fandalism.com/800x800%2D9759764%2D%2DED907914%2DC769%2D4575%2DA2C5E3B070BC57E9%2D%2D0%2D%2D334737%2D%2Dhmoinstaedit%2Ejpg',
-      alt: 'Hair Me Out cover',
-      songs: [
-        { title: 'Hair Me Out', slug: 'hair-me-out', artist: 'Georgia Wixen' }
-      ],
-    },
-    {
       title: 'The Nice Girls (Diamond Edition)',
       artist: 'The Nice Girls',
       date: '07/04/2025',
