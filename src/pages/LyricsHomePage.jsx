@@ -10,7 +10,13 @@ export default function LyricsHomePage() {
       date: 'coming 9/19/2025',
       cover: 'https://i.postimg.cc/XnzbZ5kp/TSSTCDFRONTEDIT.jpg',
       alt: 'The Sweet Tea Tragedies cover',
-      songs: [], // Coming soon
+      songs: [
+        { title: "Y'all Can Wait", slug: 'yall-can-wait', artist: 'Georgia Wixen' },
+        { title: "Hair Me Out", slug: 'hair-me-out', artist: 'Georgia Wixen' },
+        { title: "Cry Me a Realtor", slug: 'cry-me-a-realtor', artist: 'Georgia Wixen' },
+        { title: "In Contempt", slug: 'in-contempt', artist: 'Georgia Wixen' },
+        { title: "I Do (I Don't)", slug: 'i-do-i-dont', artist: 'Georgia Wixen' }
+      ],
     },
     {
       title: "I Do (I Don't)",
