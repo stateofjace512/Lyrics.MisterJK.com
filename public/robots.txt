@@ -1,0 +1,12 @@
+# -------------------------------------------------------------------------
+# | BEEP BOOP. Robots are not allowed to track the following information, |
+# | but nothing stops you! Have fun!                                      |
+# -------------------------------------------------------------------------
+
+User-agent: *
+Disallow: /Segoe UI Light.woff2
+
+Allow: /sitemap.xml
+Allow: /sitemap.xsl
+
+Sitemap: https://lyrics.misterjk.com/sitemap.xml
