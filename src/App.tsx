@@ -42,6 +42,9 @@ function App() {
         <Route path="/song/you-cant-top-this" element={<YouCantTopThis />} />
         <Route path="/song/girl-down" element={<GirlDown />} />
         <Route path="/song/i-do-i-dont" element={<IDoIDont />} />
+        <Route path="/song/cry-me-a-realtor" element={<CryMeARealtor />} />
+        <Route path="/song/yall-can-wait" element={<YallCanWait />} />
+        <Route path="/song/in-contempt" element={<InContempt />} />
         <Route path="/song/hair-me-out" element={<HairMeOut />} />
         <Route path="/song/santas-on-pto" element={<SantasOnPTO />} />
         <Route path="/song/hold-secure-evacuate" element={<HoldSecureEvacuate />} />
