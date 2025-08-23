@@ -2,71 +2,71 @@ import React from 'react';
 import SongPage from '../components/SongPage';
 
 export default function YouCantTopThis() {
-  const lyrics = `i saw her in your story
-blonde too sweet
-wearin' that smile you said you hated on me
-she copies my laugh my pose my tone
-tell me baby how's it feel dating a clone
+  const lyrics = `I saw her in your story
+Blonde, too sweet
+Wearin' that smile you said you hated on me
+She copies my laugh, my pose, my tone
+Tell me baby, how's it feel dating a clone?
 
-you say "it's different" but she orders what i did
-you say "i've moved on" but your playlist still hits
-you're lookin' for me in lips that don't bite
-you're in love with the ghost you swore you didn't like
-
-YOU CAN'T TOP THIS
-top this
-top this
-top this
-top this
-top this
-top this
-i'm the climax in your silence
-in your silence
-in your silence
-in your silence
-the name you skip in therapy the girl who made you timeless
-oh go ahead play pretend
-but every high's a myth
-you can date lips but
-YOU CAN'T TOP THIS
-
-i'm not mad
-i'm not pressed
-i got promoted to "ex you regret"
-i sleep fine while you obsess over girls who dress like me
-and almost impress
-
-you say "she's better"
-but she quotes my line
-you said you're "over it" then liked my post at midnight
-you ran away but i became the sky
-you can't stop watching what you let die
+You say "it's different" but she orders what I did
+You say "I've moved on" but your playlist still hits
+You're lookin' for me in lips that don't bite
+You're in love with the ghost you swore you didn't like
 
 YOU CAN'T TOP THIS
-i'm the peak that broke your meter
-the taste in your new lips
-that only makes it weaker
-try again call it bliss
-but every touch still twists
-you can move your hips but
+Top this
+Top this
+Top this
+Top this
+Top this
+Top this
+I'm the climax in your silence
+In your silence
+In your silence
+In your silence
+The name you skip in therapy the girl who made you timeless
+Oh go ahead play pretend
+But every high's a myth
+You can date lips but
 YOU CAN'T TOP THIS
 
-you didn't break me
-you branded me
-every girl after carries a piece of me
-you don't date you compare
-you don't heal you stare
-you made you mess but i made history
+I'm not mad
+I'm not pressed
+I got promoted to "ex you regret"
+I sleep fine, while you obsess over girls who dress like me
+And almost impress
+
+You say "she's better"
+But she quotes my line
+You said you're "over it", then liked my post at midnight
+You ran away, but I became the sky
+You can't stop watching what you let die
 
 YOU CAN'T TOP THIS
-i'm the burn beneath your rebound
-the echo in your new sound
-the scream you can't admit
-go flirt go fuck go fake a fit
-you'll get a spark but not this hit
-you had a flame but I lit the wick
-and baby you can't
-top this`;
+I'm the peak that broke your meter
+The taste in your new lips
+That only makes it weaker
+Try again call it bliss
+But every touch still twists
+You can move your hips but
+YOU CAN'T TOP THIS
+
+You didn't break me
+You branded me
+Every girl after carries a piece of me
+You don't date you compare
+You don't heal you stare
+You made you mess, but I made history
+
+YOU CAN'T TOP THIS
+I'm the burn beneath your rebound
+The echo in your new sound
+The scream you can't admit
+Go flirt, go fuck, go fake a fit
+You'll get a spark but not this hit
+You had a flame but I lit the wick
+And baby you can't
+Top this`;
 
   const credits = (
     <>
