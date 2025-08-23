@@ -1,9 +1,11 @@
 import React from 'react';
 import { Routes, Route, BrowserRouter } from 'react-router-dom';
+
 import LyricsHomePage from './pages/LyricsHomePage';
 import NotFound from './pages/NotFound';
+import TNGFixer from './components/TNGFixer';
 
-// TNG
+// TNG songs
 import AskMama from './songs/AskMama';
 import ReturnPolicy from './songs/ReturnPolicy';
 import SharinLocation from './songs/SharinLocation';
@@ -14,19 +16,23 @@ import MissedMeOut from './songs/MissedMeOut';
 import YouCantTopThis from './songs/YouCantTopThis';
 import GirlDown from './songs/GirlDown';
 import OhThereItIs from './songs/OhThereItIs';
-//Georgia TSTT
+
+// Georgia TSTT songs
 import IDoIDont from './songs/IDoIDont';
 import HairMeOut from './songs/HairMeOut';
 import CryMeARealtor from './songs/CryMeARealtor';
 import InContempt from './songs/InContempt';
 import YallCanWait from './songs/YallCanWait';
-//Other Artists
+
+// Other artists
 import SantasOnPTO from './songs/SantasOnPTO';
 import HoldSecureEvacuate from './songs/HoldSecureEvacuate';
 
 function App() {
   return (
     <BrowserRouter>
+      <TNGFixer />
+
       <Routes>
         <Route path="/" element={<LyricsHomePage />} />
 
@@ -41,15 +47,19 @@ function App() {
         <Route path="/song/missed-me-missed-out" element={<MissedMeOut />} />
         <Route path="/song/you-cant-top-this" element={<YouCantTopThis />} />
         <Route path="/song/girl-down" element={<GirlDown />} />
+
+        {/* Georgia Wixen / TSTT */}
         <Route path="/song/i-do-i-dont" element={<IDoIDont />} />
         <Route path="/song/cry-me-a-realtor" element={<CryMeARealtor />} />
         <Route path="/song/yall-can-wait" element={<YallCanWait />} />
         <Route path="/song/in-contempt" element={<InContempt />} />
         <Route path="/song/hair-me-out" element={<HairMeOut />} />
+
+        {/* Other artists */}
         <Route path="/song/santas-on-pto" element={<SantasOnPTO />} />
         <Route path="/song/hold-secure-evacuate" element={<HoldSecureEvacuate />} />
 
-        {/* Catch-all for unmatched routes */}
+        {/* Catch-all */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
