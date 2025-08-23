@@ -42,7 +42,7 @@ Drama queen prom dress scenes neon lights
 Boys are cute but girls define
 Every single lyric in my mind
 
-First crush first kiss first heartbreak—worth it
+First crush, first kiss, first heartbreak worth it
 Bad at math good at this
 Loving girls is happiness
 
