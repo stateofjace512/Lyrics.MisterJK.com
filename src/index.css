@@ -307,3 +307,20 @@ a:hover .link-text-black-to-rainbow {
   opacity: 1;
   animation: rainbow-pan 1.25s linear infinite;
 }
+
+
+@font-face {
+  font-family: 'TNG';
+  src: url('/tng.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.the-nice-girls {
+  font-family: 'TNG', sans-serif;
+  background: linear-gradient(to right, #ff99cc, #ff66cc);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  line-height: 1.2;   /* or try 0.9 if you want tighter */
+  display: inline-block; /* avoids inheriting huge line box */
+}
