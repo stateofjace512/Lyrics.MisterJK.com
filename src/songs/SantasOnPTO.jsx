@@ -2,55 +2,60 @@ import React from 'react';
 import SongPage from '../components/SongPage';
 
 export default function SantasOnPTO() {
-  const lyrics = `Out of office, red suit's dry cleaned
-He left the elves on read and dipped the scene
-Said "I'm tired of letters, give me sand"
-Now he's barefoot with a drink in hand
+  const lyrics = `(F) (Dm) 
+(F)Out of office, red suit's dry cleaned
+(Dm)He left the elves on read and dipped the scene
+(F)Said "I'm tired of letters, give me sand"
+(C)Now he's barefoot with a drink in hand
 
-Mrs. Claus said "he's been tense"
-Now he's shirtless on a beach in France
-Reindeer gone, no sleigh in sight
-Santa took a jet and missed his flight
+(F)Mrs. Claus said "he's been tense"
+(Dm)Now he's shirtless on a beach in France
+(Bb)Reindeer gone, no sleigh in sight
+(C)Santa took a jet and missed his flight
 
-Santa's on PTO
-He's not checkin' twice, he's letting it go
-No chimney dives, no ho-ho-ho
-He said "baby, I'm burnt out, let it snow"
-Nah, he's sippin' eggnog on a boat
-Sleigh parked, no coat Let the North Pole know
-Santa's on PTO
+(F)Santa's on PTO
+He's not checkin' (Dm)twice, he's letting it go
+No (Gm)chimney dives, no ho-ho-ho
+He said (Bb)"baby, I'm burnt out, (C)let it snow"
+Nah, (F)he's sippin' (Am)eggnog (Dm)on a (Bb)boat 
+(Gm)Sleigh parked, no coat Let the North Pole (Bb)know 
+Santa's on (C)PTO 
 
-He unfollowed the naughty list
-Said "I've been working through December pissed"
-Now he's got SPF on his belly
-Watching Die Hard in a beach house in Maui
+(F) (Dm)
 
-Candy canes in a coconut cup
-Rudolph's out here turnin' up
-Christmas in July's the mood
-Santa said, "catch me in swim trunks, dude"
+He (F)unfollowed the naughty list
+Said "I've been (Dm)working through December pissed"
+Now (Bb)he's got SPF on his belly
+Watching (C)Die Hard in a beach house in Maui
 
-Santa's on PTO
-Burned his calendar, let the deadlines go
-No reindeer, no snow patrol
-He's ghosted the Pole and gained control
-Yeah, he's on a hammock with a tan
-Reading fan mail from a fan
-Tell the elves "don't call, just go"
-Santa's on PTO
+(F)Candy canes in a coconut cup
+(Dm)Rudolph's out here turnin' up
+(Bb)Christmas in July's the mood
+(C)Santa said, "catch me in swim trunks, dude"
 
-You better not pout, better not cry
-He's not answering 'til the 25th of July
-No cookies, no milk, just rum and lime
-Santa's reclaiming his overtime
+(F)Santa's on PTO
+Burned his calendar, (Dm)let the deadlines go
+No (Gm)reindeer, no snow patrol
+He's (Bb)ghosted the Pole and (C)gained control
+Yeah, he's (Dm)on a hammock with a (Am)tan
+Reading fan mail (Dm)from a (Bb)fan 
+(Gm)Tell the elves "don't call, just (Bb)go"
+Santa's on(C) PTO 
 
-Santa's on PTO
-No sleigh bells, just a radio
-Flip-flops where the boots should go
-He said "Merry whatever, I'm moving slow"
-So, if your tree's on fire
-Or your lights won't glow
-Too bad, babe Santa's on PTO`;
+(F)
+
+You (Bb)better not pout, better not cry
+He's not (C)answering 'til the 25th of July
+No (Gm)cookies, no milk, just (Bb)rum and lime
+(F)Santa's reclaiming his (Bb)overtime
+
+(F)Santa's on PTO
+No sleigh (Dm)bells, just a radio
+Flip-(Gm)flops where the boots should go
+He said “(Bb)Merry whatever, I'm (C)moving slow"
+So, (F)if your tree's on (A)fire
+Or your (Dm)lights won't (Bb)glow
+(Gm)Too bad, (G)babe (Bb)Santa's on (A)PTO`;
 
   const credits = (
     <>
