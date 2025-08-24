@@ -4,8 +4,8 @@
 
 /* Load Segoe UI Light font */
 @font-face {
-  font-family: 'Segoe UI Light';
-  src: url('/Segoe UI Light.woff2') format('woff2');
+  font-family: 'Selawik UI Light';
+  src: url('/Selawik-Light.woff2') format('woff2');
   font-weight: 300;
   font-style: normal;
   font-display: swap;
@@ -13,7 +13,7 @@
 
 /* Set Inter as default font */
 html {
-  font-family: 'Segoe UI Light', 'Inter', ui-sans-serif, system-ui, sans-serif;
+  font-family: 'Selawik UI Light', 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
 /* Animation classes */
