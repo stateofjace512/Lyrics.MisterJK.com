@@ -76,10 +76,14 @@ export const DEFAULT_DIAGRAMS = {
   Eaug: "032110",
 };
 
-// Helper function to detect barre chords
+// Helper function to detect barre chords - improved to avoid false positives
 function detectBarrePattern(fingering) {
   const cols = fingering.trim().split("");
   const frets = cols.map(c => (/[1-9]/.test(c) ? Number(c) : null));
+  
+  // Don't consider open chord positions as potential barres
+  const nonOpenFrets = frets.filter(f => f !== null && f > 0);
+  if (nonOpenFrets.length === 0) return null;
   
   // Find potential barre positions
   const barreInfo = [];
@@ -87,29 +91,33 @@ function detectBarrePattern(fingering) {
   // Check each fret for multiple fingers on the same fret
   for (let fret = 1; fret <= 12; fret++) {
     const positions = frets.map((f, i) => f === fret ? i : -1).filter(p => p !== -1);
-    if (positions.length >= 2) {
-      // Check if positions are consecutive (allowing for muted strings)
+    if (positions.length >= 3) { // Require at least 3 strings for a barre (was 2)
+      // Check if positions form a valid barre pattern
       const sortedPos = positions.sort((a, b) => a - b);
-      let consecutive = true;
+      let validBarre = true;
+      
+      // For a valid barre, we need consecutive strings or only muted strings in between
       for (let i = 0; i < sortedPos.length - 1; i++) {
         let gap = sortedPos[i + 1] - sortedPos[i];
-        // Allow gaps only if the strings in between are muted
         if (gap > 1) {
-          let allMutedBetween = true;
+          // Check if all strings in between are muted (null) or open (0)
+          let allMutedOrOpen = true;
           for (let j = sortedPos[i] + 1; j < sortedPos[i + 1]; j++) {
-            if (frets[j] !== null) {
-              allMutedBetween = false;
+            if (frets[j] !== null && frets[j] !== 0) {
+              allMutedOrOpen = false;
               break;
             }
           }
-          if (!allMutedBetween) {
-            consecutive = false;
+          if (!allMutedOrOpen) {
+            validBarre = false;
             break;
           }
         }
       }
       
-      if (consecutive && positions.length >= 2) {
+      // Additional check: make sure it's not just scattered individual notes
+      const span = sortedPos[sortedPos.length - 1] - sortedPos[0];
+      if (validBarre && span >= 2 && positions.length >= 3) {
         barreInfo.push({
           fret,
           startString: Math.min(...positions),
@@ -123,7 +131,7 @@ function detectBarrePattern(fingering) {
   // Return the most comprehensive barre (covers most strings)
   if (barreInfo.length > 0) {
     return barreInfo.reduce((best, current) => 
-      (current.endString - current.startString) > (best.endString - best.startString) ? current : best
+      (current.positions.length > best.positions.length) ? current : best
     );
   }
   
@@ -293,32 +301,56 @@ export default function ChordLyrics({
       return `__CHORD_WORD_${parts.length - 1}__`;
     });
     
-    // Process solo chords - improved detection
-    processed = processed.replace(chordSolo, (match, chord, offset, fullString) => {
-      const originalChord = chord;
-      const label = prettyChord(chord);
-      const fingering = DICTS[originalChord] || DICTS[chord] || "";
+    // Process solo chords - improved detection to handle consecutive chords
+    const chordSoloMatches = [];
+    let match;
+    while ((match = chordSolo.exec(processed)) !== null) {
+      chordSoloMatches.push({
+        match: match[0],
+        chord: match[1],
+        index: match.index,
+        lastIndex: chordSolo.lastIndex
+      });
+    }
+    
+    // Process matches in reverse order to maintain indices
+    for (let i = chordSoloMatches.length - 1; i >= 0; i--) {
+      const matchData = chordSoloMatches[i];
+      const originalChord = matchData.chord;
+      const label = prettyChord(originalChord);
+      const fingering = DICTS[originalChord] || DICTS[originalChord] || "";
       
-      // Check context around the chord
-      const beforeChar = offset > 0 ? fullString[offset - 1] : '';
-      const afterMatch = fullString.slice(offset + match.length);
-      const isStartOfLine = offset === 0 || beforeChar === '\n';
-      const isEndOfLine = /^\s*\n/.test(afterMatch) || afterMatch === '';
-      const hasTextAfter = /^\s*[A-Za-z]/.test(afterMatch) && !isEndOfLine;
+      // Check if this is part of a sequence of consecutive chords
+      const nextMatch = chordSoloMatches[i + 1];
+      const prevMatch = chordSoloMatches[i - 1];
+      
+      // Check what comes immediately after this chord
+      const afterChord = processed.slice(matchData.lastIndex);
+      const isFollowedByChord = nextMatch && (nextMatch.index - matchData.lastIndex <= 5); // Allow some whitespace
+      const isFollowedByText = /^\s*[A-Za-z]/.test(afterChord);
+      const isAtLineEnd = /^\s*\n/.test(afterChord) || afterChord === '';
+      
+      // Check what comes before
+      const beforeChord = processed.slice(0, matchData.index);
+      const isPrecededByChord = prevMatch && (matchData.index - prevMatch.lastIndex <= 5);
+      const isAtLineStart = /\n\s*$/.test(beforeChord) || beforeChord === '';
+      
+      const isInChordSequence = isFollowedByChord || isPrecededByChord;
+      const isStandalone = (isAtLineStart || isAtLineEnd) && !isFollowedByText;
       
       parts.push({
         type: 'chord-solo',
         chord: originalChord,
         label: label,
         fingering: fingering,
-        original: match,
-        isStartOfLine: isStartOfLine,
-        hasTextAfter: hasTextAfter,
-        isStandalone: isStartOfLine || isEndOfLine || /^\s+/.test(afterMatch)
+        original: matchData.match,
+        isStandalone: isStandalone || isInChordSequence,
+        isInSequence: isInChordSequence
       });
       
-      return `__CHORD_SOLO_${parts.length - 1}__`;
-    });
+      const replacement = `__CHORD_SOLO_${parts.length - 1}__`;
+      processed = processed.slice(0, matchData.index) + replacement + processed.slice(matchData.lastIndex);
+    }
     
     return { processed, parts };
   }, [text, DICTS]);
@@ -356,7 +388,7 @@ export default function ChordLyrics({
           color: #2563eb;
           cursor: pointer;
           white-space: nowrap;
-          z-index: 1;
+          z-index: 10;
         }
         .chord-tag {
           display: inline-block;
@@ -373,10 +405,12 @@ export default function ChordLyrics({
           position: relative;
         }
         .chord-tag-solo {
-          display: block;
-          width: fit-content;
-          margin-bottom: 1.25rem;
-          margin-top: 1rem;
+          margin-bottom: .5rem;
+          margin-top: .25rem;
+        }
+        .chord-tag-sequence {
+          margin-right: .3rem;
+          margin-bottom: .25rem;
         }
         .chord-tooltip {
           display: none;
@@ -390,8 +424,9 @@ export default function ChordLyrics({
           border-radius: .5rem;
           padding: .5rem;
           box-shadow: 0 10px 25px rgba(0,0,0,.15);
-          z-index: 9999;
+          z-index: 99999;
           white-space: nowrap;
+          pointer-events: none;
         }
         .chord-rt:hover .chord-tooltip,
         .chord-tag:hover .chord-tooltip {
@@ -459,8 +494,10 @@ export default function ChordLyrics({
           if (chordSoloMatch) {
             const partIndex = parseInt(chordSoloMatch[1]);
             const chordPart = processedContent.parts[partIndex];
-            const className = chordPart.isStandalone 
-              ? "chord-tag chord-tag-solo" 
+            const className = chordPart.isInSequence 
+              ? "chord-tag chord-tag-sequence" 
+              : chordPart.isStandalone
+              ? "chord-tag chord-tag-solo"
               : "chord-tag";
             return (
               <span key={index} className={className}>
