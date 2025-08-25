@@ -70,6 +70,10 @@ export const DEFAULT_DIAGRAMS = {
   Ebdim:{ f: "xx1212" },
   Caug: { f: "x32110" },
   Eaug: { f: "032110" },
+
+  // ---- custom chords ----
+  "F#/Bb": { f: "244322", barre: { fret: 2, start: 0, end: 5 } },
+
 };
 
 function GuitarChordDiagram({
