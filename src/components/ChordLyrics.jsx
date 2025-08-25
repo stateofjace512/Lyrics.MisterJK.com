@@ -154,10 +154,12 @@ function GuitarChordDiagram({
 
 /** Pretty display for accidentals (Bb -> B♭; # -> ♯) */
 function prettyChord(chord) {
-  const s = chord == null ? "" : String(chord);
+  // Handle undefined, null, or any falsy values more defensively
+  if (!chord) return "";
+  
+  const s = String(chord);
   return s.replace(/b/g, "♭").replace(/#/g, "♯");
 }
-
 
 /** Main renderer: turns "(F)Word" into ruby with hoverable chord diagram. */
 export default function ChordLyrics({
