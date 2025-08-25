@@ -310,109 +310,132 @@ export default function ChordLyrics({
   return (
     <div className="chord-lyrics-container">
       <style>{`
-        .chord-lyrics-container {
-          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-        .lyrics { 
-          line-height: 2.2; 
-          font-size: 1rem; 
-          white-space: pre-wrap;
-          margin-bottom: 2rem;
-        }
-        .chord-ruby { 
-          position: relative;
-          display: inline-block;
-        }
-        .chord-rt {
-          position: absolute;
-          top: -1.2em;
-          left: 0;
-          font-weight: 700;
-          font-size: .75rem;
-          color: #2563eb;
-          cursor: pointer;
-          white-space: nowrap;
-          z-index: 10;
-        }
-        .chord-tag {
-          display: inline-block;
-          font-weight: 700;
-          font-size: .75rem;
-          padding: .2rem .4rem;
-          background: #eff6ff;
-          color: #2563eb;
-          border: 1px solid #2563eb;
-          border-radius: .25rem;
-          margin-right: .5rem;
-          margin-bottom: .25rem;
-          cursor: pointer;
-          position: relative;
-        }
-        .chord-tag-solo {
-          margin-bottom: .5rem;
-          margin-top: .25rem;
-        }
-        .chord-tag-sequence {
-          margin-right: .3rem;
-          margin-bottom: .25rem;
-        }
-        .chord-tag-single-standalone {
-          display: block;
-          width: fit-content;
-          margin-bottom: 1.5rem;
-          margin-top: 1rem;
-          margin-right: 0;
-        }
-        .chord-tooltip {
-          display: none;
-          position: absolute;
-          top: 100%;
-          left: 50%;
-          transform: translateX(-50%);
-          margin-top: .5rem;
-          background: white;
-          border: 1px solid #d1d5db;
-          border-radius: .5rem;
-          padding: .5rem;
-          box-shadow: 0 10px 25px rgba(0,0,0,.15);
-          z-index: 99999;
-          white-space: nowrap;
-          pointer-events: none;
-        }
-        .chord-rt:hover .chord-tooltip,
-        .chord-tag:hover .chord-tooltip {
-          display: block;
-        }
-        .legend {
-          margin-top: 2rem;
-          padding-top: 2rem;
-          border-top: 1px solid #e5e7eb;
-          position: relative;
-          z-index: 1;
-        }
-        .legend h3 {
-          font-size: 1.1rem;
-          font-weight: 700;
-          margin-bottom: 1rem;
-          color: #374151;
-        }
-        .legend-grid {
-          display: grid;
-          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-          gap: 1.5rem;
-        }
-        .legend-item {
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          text-align: center;
-        }
-        .legend-item .chord-name {
-          font-weight: 700;
-          font-size: .9rem;
-          margin-bottom: .5rem;
-          color: #2563eb;
-        }
+         .chord-lyrics-container {
+           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+         }
+         
+         .lyrics { 
+           line-height: 2.2; 
+           font-size: 1rem; 
+           white-space: pre-wrap;
+           margin-bottom: 2rem;
+         }
+         
+         .chord-ruby { 
+           position: relative;
+           display: inline-block;
+         }
+         
+         /* Remove stacking context from the inline blue label */
+         .chord-rt {
+           position: absolute;
+           top: -1.2em;
+           left: 0;
+           font-weight: 700;
+           font-size: .75rem;
+           color: #2563eb;
+           cursor: pointer;
+           white-space: nowrap;
+           z-index: auto; /* was 10 */
+         }
+         
+         /* Tag chips for stand-alone chords */
+         .chord-tag {
+           display: inline-block;
+           font-weight: 700;
+           font-size: .75rem;
+           padding: .2rem .4rem;
+           background: #eff6ff;
+           color: #2563eb;
+           border: 1px solid #2563eb;
+           border-radius: .25rem;
+           margin-right: .5rem;
+           margin-bottom: .25rem;
+           cursor: pointer;
+           position: relative;
+         }
+         
+         .chord-tag-solo {
+           margin-bottom: .5rem;
+           margin-top: .25rem;
+         }
+         
+         .chord-tag-sequence {
+           margin-right: .3rem;
+           margin-bottom: .25rem;
+         }
+         
+         .chord-tag-single-standalone {
+           display: block;
+           width: fit-content;
+           margin-bottom: 1.5rem;
+           margin-top: 1rem;
+           margin-right: 0;
+         }
+         
+         /* Tooltip sits above everything; isolate to avoid weird blending */
+         .chord-tooltip {
+           display: none;
+           position: absolute;
+           top: 100%;
+           left: 50%;
+           transform: translateX(-50%);
+           margin-top: .5rem;
+           background: white;
+           border: 1px solid #d1d5db;
+           border-radius: .5rem;
+           padding: .5rem;
+           box-shadow: 0 10px 25px rgba(0,0,0,.15);
+           z-index: 999999;          /* higher than any inline text */
+           white-space: nowrap;
+           pointer-events: none;
+           isolation: isolate;        /* creates a clean stacking context */
+         }
+         
+         /* Show tooltip on hover */
+         .chord-rt:hover .chord-tooltip,
+         .chord-tag:hover .chord-tooltip {
+           display: block;
+         }
+         
+         /* Optional: hide the blue label while tooltip is open to prevent any overlap artifacts */
+         .chord-rt:hover { color: transparent; text-shadow: none; }
+         
+         .legend {
+           margin-top: 2rem;
+           padding-top: 2rem;
+           border-top: 1px solid #e5e7eb;
+           position: relative;
+           z-index: 1;
+         }
+         
+         .legend h3 {
+           font-size: 1.1rem;
+           font-weight: 700;
+           margin-bottom: 1rem;
+           color: #374151;
+         }
+         
+         .legend-grid {
+           display: grid;
+           grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+           gap: 1.5rem;
+         }
+         
+         .legend-item {
+           display: flex;
+           flex-direction: column;
+           align-items: center;
+           text-align: center;
+         }
+         
+         .legend-item .chord-name {
+           font-weight: 700;
+           font-size: .9rem;
+           margin-bottom: .5rem;
+           color: #2563eb;
+         }
+
       `}</style>
 
       <div className="lyrics">
