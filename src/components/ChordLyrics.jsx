@@ -183,36 +183,14 @@ export default function ChordLyrics({
     const safeText = text || "";
     let processed = safeText;
     
-    // Track processed chords and their positions
-    const processedPositions = [];
+    // Enhanced regex to better capture chord variations
+    const chordWord = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)\s*([^\s\(\)\n]+)/g;
+    const chordSolo = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)(?!\s*[A-Za-z\d])/g;
     
-    // First pass: chord-word combinations
-    processed = processed.replace(chordWord, (match, chord, word, offset) => {
-      const originalChord = chord;
-      const label = prettyChord(chord);
-      const fingering = DICTS[originalChord] || DICTS[chord] || "";
-      
-      processedPositions.push({ start: offset, end: offset + match.length });
-      
-      return {
-        type: 'chord-word',
-        chord: originalChord,
-        label: label,
-        word: word,
-        fingering: fingering
-      };
-    });
-    
-    // Second pass: solo chords (avoiding already processed areas)
-    let result = [];
-    let lastIndex = 0;
-    
-    // Convert processed to array format for easier handling
     const parts = [];
-    let tempProcessed = safeText;
     
-    // Process chord-word combinations
-    tempProcessed = tempProcessed.replace(chordWord, (match, chord, word) => {
+    // Process chord-word combinations first
+    processed = processed.replace(chordWord, (match, chord, word) => {
       const originalChord = chord;
       const label = prettyChord(chord);
       const fingering = DICTS[originalChord] || DICTS[chord] || "";
@@ -229,24 +207,32 @@ export default function ChordLyrics({
       return `__CHORD_WORD_${parts.length - 1}__`;
     });
     
-    // Process solo chords
-    tempProcessed = tempProcessed.replace(chordSolo, (match, chord) => {
+    // Process solo chords - check if they're at start of line or after newline
+    processed = processed.replace(chordSolo, (match, chord, offset, fullString) => {
       const originalChord = chord;
       const label = prettyChord(chord);
       const fingering = DICTS[originalChord] || DICTS[chord] || "";
+      
+      // Check if this chord is at the start of a line
+      const beforeChar = offset > 0 ? fullString[offset - 1] : '';
+      const afterMatch = fullString.slice(offset + match.length);
+      const isStartOfLine = offset === 0 || beforeChar === '\n';
+      const hasTextAfter = /^\s*[A-Za-z]/.test(afterMatch);
       
       parts.push({
         type: 'chord-solo',
         chord: originalChord,
         label: label,
         fingering: fingering,
-        original: match
+        original: match,
+        isStartOfLine: isStartOfLine,
+        hasTextAfter: hasTextAfter
       });
       
       return `__CHORD_SOLO_${parts.length - 1}__`;
     });
     
-    return { tempProcessed, parts };
+    return { processed, parts };
   }, [text, DICTS]);
 
   // Collect unique chords for legend
@@ -298,6 +284,12 @@ export default function ChordLyrics({
           cursor: pointer;
           position: relative;
         }
+        .chord-tag-solo {
+          display: block;
+          width: fit-content;
+          margin-bottom: .75rem;
+          margin-top: .5rem;
+        }
         .chord-tooltip {
           display: none;
           position: absolute;
@@ -310,7 +302,7 @@ export default function ChordLyrics({
           border-radius: .5rem;
           padding: .5rem;
           box-shadow: 0 10px 25px rgba(0,0,0,.15);
-          z-index: 10;
+          z-index: 1000;
           white-space: nowrap;
         }
         .chord-rt:hover .chord-tooltip,
@@ -348,7 +340,7 @@ export default function ChordLyrics({
       `}</style>
 
       <div className="lyrics">
-        {processedContent.tempProcessed.split(/(__CHORD_(?:WORD|SOLO)_\d+__)/g).map((part, index) => {
+        {processedContent.processed.split(/(__CHORD_(?:WORD|SOLO)_\d+__)/g).map((part, index) => {
           const chordWordMatch = part.match(/__CHORD_WORD_(\d+)__/);
           const chordSoloMatch = part.match(/__CHORD_SOLO_(\d+)__/);
           
@@ -377,8 +369,11 @@ export default function ChordLyrics({
           if (chordSoloMatch) {
             const partIndex = parseInt(chordSoloMatch[1]);
             const chordPart = processedContent.parts[partIndex];
+            const className = chordPart.isStartOfLine && chordPart.hasTextAfter 
+              ? "chord-tag chord-tag-solo" 
+              : "chord-tag";
             return (
-              <span key={index} className="chord-tag">
+              <span key={index} className={className}>
                 {chordPart.label}
                 {chordPart.fingering && (
                   <div className="chord-tooltip">
