@@ -31,7 +31,7 @@ export const DEFAULT_DIAGRAMS = {
   Cm:  { f: "x35543", barre: { fret: 3, start: 1, end: 5 } },
   Bbm: { f: "x13321", barre: { fret: 1, start: 1, end: 5 } }, "A#m": { f: "x13321", barre: { fret: 1, start: 1, end: 5 } },
   Dbm: { f: "x46654", barre: { fret: 4, start: 1, end: 5 } }, "C#m": { f: "x46654", barre: { fret: 4, start: 1, end: 5 } },
-  Ebm: { f: "x65343", barre: { fret: 6, start: 1, end: 5 } }, "D#m": { f: "x65343", barre: { fret: 6, start: 1, end: 5 } },
+  Ebm: { f: "x68876", barre: { fret: 6, start: 0, end: 5 } }, "D#m": { f: "x68876", barre: { fret: 6, start: 0, end: 5 } },
   Gbm: { f: "244222", barre: { fret: 2, start: 0, end: 5 } }, "F#m": { f: "244222", barre: { fret: 2, start: 0, end: 5 } },
   Abm: { f: "466444", barre: { fret: 4, start: 0, end: 5 } }, "G#m": { f: "466444", barre: { fret: 4, start: 0, end: 5 } },
   // ---- 7ths ----
@@ -51,7 +51,7 @@ export const DEFAULT_DIAGRAMS = {
   Gmaj7: { f: "320002" },
   Amaj7: { f: "x02120" },
   Fmaj7: { f: "xx3210" },
-  Bbmaj7:{ f: "x13231", barre: { fret: 1, start: 1, end: 5 } }, "A#maj7": { f: "x13231", barre: { fret: 1, start: 1, end: 5 } },
+  Bbmaj7:{ f: "x13231" }, "A#maj7": { f: "x13231" },
   // ---- sus / add ----
   Asus2:   { f: "x02200" },
   Asus4:   { f: "x02230" },
@@ -62,7 +62,7 @@ export const DEFAULT_DIAGRAMS = {
   Csus4:   { f: "x33011" },
   Gsus4:   { f: "330013" },
   Cadd9:   { f: "x32033" },
-  "F(add9)": { f: "1x3213", barre: { fret: 1, start: 0, end: 5 } },
+  "F(add9)": { f: "1x3213" },
   "Dsus2/F#": { f: "2x0230" },
   // ---- dim / aug ----
   Bdim: { f: "x20101" },
