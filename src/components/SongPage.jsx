@@ -106,6 +106,15 @@ export default function SongPage({
                 {releaseDate && (
                   <p className="text-sm text-neutral-500 mb-6">{releaseDate}</p>
                 )}
+                {/* Song Info (only shows if chords are enabled) */}
+                {mode !== "lyrics-only" && (bpm || keySig || capo) && (
+                  <div className="mb-6 text-sm text-neutral-700 space-x-4">
+                    {bpm && <span><strong>BPM:</strong> {bpm}</span>}
+                    {keySig && <span><strong>Key:</strong> {keySig}</span>}
+                    {capo && <span><strong>Capo:</strong> {capo}</span>}
+                  </div>
+                )}
+
 
                 {/* Action buttons */}
                 <div className="flex flex-wrap gap-3">
