@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Navigation from './Navigation';
-import { ArrowRight, ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 import ChordLyrics from "./ChordLyrics";
 
 export default function SongPage({
@@ -15,6 +15,8 @@ export default function SongPage({
   albumSlug,
   isAlbumTrack = false,
 }) {
+  const [mode, setMode] = useState("lyrics-only"); // 👈 default mode
+
   return (
     <div className="min-h-screen relative overflow-hidden">
       {/* Paper / subtle noise background */}
@@ -66,6 +68,7 @@ export default function SongPage({
               <span>View All Lyrics</span>
             </EmbossedLink>
           </div>
+
           {/* Main content card */}
           <div className="rounded-2xl border border-neutral-300 bg-gradient-to-b from-white to-neutral-100 shadow-[0_10px_30px_rgba(0,0,0,0.15)] ring-1 ring-black/5 p-6 md:p-10">
             {/* Header with cover art */}
@@ -121,13 +124,23 @@ export default function SongPage({
 
             {/* Lyrics Section */}
             <section className="mb-12">
-              <h2 className="text-3xl font-bold text-neutral-800 mb-6">Lyrics</h2>
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-3xl font-bold text-neutral-800">Lyrics</h2>
+                <button
+                  onClick={() => setMode(mode === "full" ? "lyrics-only" : "full")}
+                  className="px-3 py-1 text-sm font-semibold border border-neutral-300 rounded-md bg-white shadow-sm hover:bg-neutral-100 transition"
+                >
+                  {mode === "full" ? "Hide Chords" : "Chords (NEW!)"}
+                </button>
+              </div>
+
               <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
                 <div className="prose prose-neutral max-w-none">
-                  <ChordLyrics text={lyrics} />
+                  <ChordLyrics text={lyrics} mode={mode} />
                 </div>
               </div>
             </section>
+
             {/* Credits Section */}
             <section className="mb-8">
               <h2 className="text-3xl font-bold text-neutral-800 mb-6">
