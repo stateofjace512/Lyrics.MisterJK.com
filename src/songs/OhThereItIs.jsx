@@ -6,61 +6,67 @@ export default function OhThereItIs() {
 Have you seen my purse?
 Oh, there it is
 
-Everything I am is in that bag
-ID, lip gloss, keys to the past
-Receipts of heartbreak, coins of regret
-Mascara I wore when I first left
+(Em) (D) (C) (G)
 
-I dug through couches, floors, my soul
-Thought I lost my self control
-Spinning rooms, forgotten names
+Everything I am is (Em)in that bag
+ID, lip gloss, keys to the (D)past
+Receipts of heartbreak, (C)coins of regret
+Mascara I wore when (G)I first left
+
+I dug through couches, (Em)floors, my soul
+Thought I lost my (D)self control
+Spinning rooms, for(C)gotten names
 Empty hands and full of blame
 
 Oh, there it is
-In the mirror, in the dark
-By the door where I fell apart
-Oh, there it is
-Sitting still through all my doubt
-Like it never even left the house
-Oh, there it is
-The proof I'm still alive
+(G)In the mirror, in the dark
+(D)By the door where I fell (Em)apart
+Oh, there it (C)is
+(G)Sitting still through all my doubt
+(D)Like it never even left the hou(Em)se
+Oh, there it (C)is
+The (Am7)proof I'm still al(D)ive
 The purse that holds my life
 
-It's got gum from 2010
-A note I never dared to send
-A scrunchie that still smells like June
-An old receipt for a silver spoon
+(G)
 
-I thought I lost my place in time
-Turns out it was just under my mind
-The zipper stuck, the lining torn
+It's got gum (Em)from 2010
+A note I (D)never dared to send
+A scrunchie that s(C)till smells like June
+An old receipt (G)for a silver spoon
+
+I thought I (Em)lost my place in time
+Turns out it was (D)just under my mind
+The zipper stuck, the lining to(C)rn
 But it still carries everything I've worn
 
 Oh, there it is
-On the counter by the light
-Where I searched a hundred nights
-Oh, there it is
+(G)On the counter by the light
+(D)Where I searched a hundred nigh(Em)ts
+Oh, there it i(C)s
 (Oh, there it is)
-All the weight I thought I dropped
-Turns out I just forgot to stop
-Oh, there it is
+(G)All the weight I thought I dropped
+(D)Turns out I just forgot to st(Em)op
+Oh, there it i(C)s
 
 Don't need a map
-Don't need a prayer
-My purse was always sitting there
-And maybe I'm the same as it
+Don't (D)need a prayer
+My (Em)purse was always (D)sitting there
+And (G)maybe I'm the same as it
 Scuffed and loud but still legit
 
-Oh, there it is
-Not just leather, not just straps
-It's everything I ever had
-Oh, there it is
-If I ever get lost again
+Oh, there it i(A#)s
+(F)Not just leather, not just (Gm)straps
+It's everything I (D#)ever had
+Oh, there it i(A#)s
+If I ever get lost (F)again
 I'll check the purse
-And start from then
-Oh, there it is
-Oh, there it is
-Oh, there I am`;
+And start from t(Gm)he(D#)n
+Oh, there it i(A#)s
+Oh, there it i(F)s
+Oh, there I a(Gm)m
+
+(D#)`;
 
   const credits = (
     <>
