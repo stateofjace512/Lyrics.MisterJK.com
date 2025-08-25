@@ -80,6 +80,7 @@ function GuitarChordDiagram({
   label,
   fingering,
   strings = 6,
+  showLabel = true,
 }) {
   const cols = fingering.trim().split("");
   const usedFrets = cols
@@ -97,7 +98,9 @@ function GuitarChordDiagram({
   return (
     <svg width={width} height={height} aria-label={`${label} chord`} role="img">
       {/* Label */}
-      <text x={width / 2} y={14} textAnchor="middle" fontWeight="700">{label}</text>
+      {showLabel && (
+        <text x={width / 2} y={14} textAnchor="middle" fontWeight="700">{label}</text>
+      )}
 
       {/* String tops: x / o */}
       {cols.map((c, i) => {
@@ -154,11 +157,10 @@ function GuitarChordDiagram({
 
 /** Pretty display for accidentals (Bb -> B♭; # -> ♯) */
 function prettyChord(chord) {
-  // Handle undefined, null, or any falsy values more defensively
   if (!chord) return "";
-  
   const s = String(chord);
-  return s.replace(/b/g, "♭").replace(/#/g, "♯");
+  // Use entities so fonts don't split them, browsers render as one glyph.
+  return s.replace(/b/g, "&#9837;").replace(/#/g, "&#9839;");
 }
 
 
