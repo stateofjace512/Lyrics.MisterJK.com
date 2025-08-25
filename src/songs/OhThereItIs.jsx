@@ -61,7 +61,7 @@ It's everything I (D#)ever had
 Oh, there it i(A#)s
 If I ever get lost (F)again
 I'll check the purse
-And start from t(Gm)he(D#)n
+And start from (Gm)the(D#)n
 Oh, there it i(A#)s
 Oh, there it i(F)s
 Oh, there I a(Gm)m
