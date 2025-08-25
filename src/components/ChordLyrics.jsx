@@ -211,7 +211,19 @@ export default function ChordLyrics({
   text = "", 
   diagrams = {},
   showLegend = true,
+  mode = "lyrics-only", 
 }) {
+
+// Modes: "lyrics-only", "inline", "full"
+if (mode === "lyrics-only") {
+  return <div className="lyrics">{text.replace(/\([^)]*\)/g, "")}</div>;
+}
+
+if (mode === "inline") {
+  return <div className="lyrics">{text}</div>;
+}
+
+
   // Merge defaults with user overrides (user wins)
   const DICTS = useMemo(() => ({ ...DEFAULT_DIAGRAMS, ...diagrams }), [diagrams]);
 
