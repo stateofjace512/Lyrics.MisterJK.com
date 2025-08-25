@@ -216,27 +216,35 @@ export default function ChordLyrics({
 
 // Modes: "lyrics-only", "inline", "full"
 if (mode === "lyrics-only") {
-  // Regex to match chords (only real chords, not things like (ooh))
-  const chordRegex = /^\s*\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)\s*$/;
+  // Match chord tokens like (F), (Dm), (Bbmaj7), etc.
+  const chordToken = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)/g;
 
-  const lines = text.split("\n").filter(line => {
-    // Drop lines that are just chords
-    if (chordRegex.test(line.trim())) return false;
+  const lines = text.split("\n").map(line => {
+    // Remove chord tokens from inside the line
+    return line.replace(chordToken, "").trimEnd();
+  });
+
+  // Remove ONLY lines that became empty *because they were only chords*
+  const cleaned = lines.filter((line, i, arr) => {
+    // If the user left a truly blank line, keep it
+    if (line.trim() === "" && (i === 0 || arr[i-1].trim() === "")) {
+      // collapse stacked empties to just one
+      return false;
+    }
     return true;
   });
 
   return (
     <div className="lyrics">
-      {lines.map((line, i) => (
+      {cleaned.map((line, i) => (
         <React.Fragment key={i}>
           {line}
-          {i < lines.length - 1 && <br />}
+          {i < cleaned.length - 1 && <br />}
         </React.Fragment>
       ))}
     </div>
   );
 }
-
 
 
 if (mode === "inline") {
