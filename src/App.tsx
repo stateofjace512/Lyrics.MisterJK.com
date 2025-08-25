@@ -4,6 +4,7 @@ import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import LyricsHomePage from './pages/LyricsHomePage';
 import NotFound from './pages/NotFound';
 import TNGFixer from './components/TNGFixer';
+import ChordLyrics from './components/ChordLyrics';
 
 // TNG songs
 import AskMama from './songs/AskMama';
@@ -32,6 +33,7 @@ function App() {
   return (
     <BrowserRouter>
       <TNGFixer />
+      <ChordLyrics />
 
       <Routes>
         <Route path="/" element={<LyricsHomePage />} />
