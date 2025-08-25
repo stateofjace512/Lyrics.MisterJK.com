@@ -14,6 +14,9 @@ export default function SongPage({
   coverImage,
   albumSlug,
   isAlbumTrack = false,
+  bpm,
+  keySig,
+  capo,
 }) {
   const [mode, setMode] = useState("lyrics-only"); // 👈 default mode
 
