@@ -99,17 +99,19 @@ function GuitarChordDiagram({
     <svg width={width} height={height} aria-label={`${label} chord`} role="img">
       {/* Label */}
       {showLabel && (
-        <text x={width / 2} y={14} textAnchor="middle" fontWeight="700">{label}</text>
+        <text x={width / 2} y={14} textAnchor="middle" fontWeight="700" fontSize="14">
+          {label}
+        </text>
       )}
 
       {/* String tops: x / o */}
       {cols.map((c, i) => {
         const x = pad + i * colW;
         if (c === "x" || c === "X") {
-          return <text key={`m${i}`} x={x} y={30} textAnchor="middle" fontSize="12">x</text>;
+          return <text key={`m${i}`} x={x} y={30} textAnchor="middle" fontSize="12">×</text>;
         }
         if (c === "0") {
-          return <text key={`o${i}`} x={x} y={30} textAnchor="middle" fontSize="12">o</text>;
+          return <circle key={`o${i}`} cx={x} cy={25} r={4} fill="none" stroke="#000" strokeWidth="2"/>;
         }
         return null;
       })}
@@ -133,6 +135,7 @@ function GuitarChordDiagram({
           y1={pad + 30}
           y2={pad + 30 + gridH}
           stroke="#000"
+          strokeWidth="1"
         />
       ))}
 
@@ -144,7 +147,7 @@ function GuitarChordDiagram({
         if (rel < 1 || rel > rows) return null;
         const cx = pad + i * colW;
         const cy = pad + 30 + rel * rowH - rowH / 2;
-        return <circle key={`p${i}`} cx={cx} cy={cy} r={7} />;
+        return <circle key={`p${i}`} cx={cx} cy={cy} r={7} fill="#000" />;
       })}
 
       {/* Base fret marker if >1 */}
@@ -159,158 +162,270 @@ function GuitarChordDiagram({
 function prettyChord(chord) {
   if (!chord) return "";
   const s = String(chord);
-  // Use entities so fonts don't split them, browsers render as one glyph.
-  return s.replace(/b/g, "&#9837;").replace(/#/g, "&#9839;");
+  // Return actual Unicode characters instead of HTML entities
+  return s.replace(/b/g, "♭").replace(/#/g, "♯");
 }
-
 
 /** Main renderer: turns "(F)Word" into ruby with hoverable chord diagram. */
 export default function ChordLyrics({
-  text = "", // Default to empty string
+  text = "", 
   diagrams = {},
   showLegend = true,
 }) {
   // Merge defaults with user overrides (user wins)
   const DICTS = useMemo(() => ({ ...DEFAULT_DIAGRAMS, ...diagrams }), [diagrams]);
 
-  // (Chord)Word — chord may include #/b, m, maj7, m7, sus, add, dim, aug, 7, etc.
-  const chordWord = /\(([A-G](?:#|b)?[a-zA-Z0-9+()\/#]*)\)\s*([^\s]+)/g;
-  const chordSolo = /\(([A-G](?:#|b)?[a-zA-Z0-9+()\/#]*)\)(?!\s*[A-Za-z])/g;
+  // Enhanced regex to better capture chord variations
+  const chordWord = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)\s*([^\s\(\)]+)/g;
+  const chordSolo = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)(?!\s*[A-Za-z\d])/g;
 
-  const html = useMemo(() => {
-    // Defensive check for text
+  const processedContent = useMemo(() => {
     const safeText = text || "";
+    let processed = safeText;
     
-    return safeText
-      .replace(chordWord, (_m, ch, word) => {
-        const label = prettyChord(ch);
-        const fing = DICTS[ch] || DICTS[label] || "";
-        const data = fing ? ` data-fingering="${fing}"` : "";
-        return `<ruby class="chord-ruby"><span>${word}</span><rt class="chord-rt" data-chord="${label}"${data}>${label}</rt></ruby>`;
-      })
-      .replace(chordSolo, (_m, ch) => {
-        const label = prettyChord(ch);
-        const fing = DICTS[ch] || DICTS[label] || "";
-        const data = fing ? ` data-fingering="${fing}"` : "";
-        return `<span class="chord-tag" data-chord="${label}"${data}>${label}</span>`;
-      })
-      .replace(/\n/g, "<br>");
+    // Track processed chords and their positions
+    const processedPositions = [];
+    
+    // First pass: chord-word combinations
+    processed = processed.replace(chordWord, (match, chord, word, offset) => {
+      const originalChord = chord;
+      const label = prettyChord(chord);
+      const fingering = DICTS[originalChord] || DICTS[chord] || "";
+      
+      processedPositions.push({ start: offset, end: offset + match.length });
+      
+      return {
+        type: 'chord-word',
+        chord: originalChord,
+        label: label,
+        word: word,
+        fingering: fingering
+      };
+    });
+    
+    // Second pass: solo chords (avoiding already processed areas)
+    let result = [];
+    let lastIndex = 0;
+    
+    // Convert processed to array format for easier handling
+    const parts = [];
+    let tempProcessed = safeText;
+    
+    // Process chord-word combinations
+    tempProcessed = tempProcessed.replace(chordWord, (match, chord, word) => {
+      const originalChord = chord;
+      const label = prettyChord(chord);
+      const fingering = DICTS[originalChord] || DICTS[chord] || "";
+      
+      parts.push({
+        type: 'chord-word',
+        chord: originalChord,
+        label: label,
+        word: word,
+        fingering: fingering,
+        original: match
+      });
+      
+      return `__CHORD_WORD_${parts.length - 1}__`;
+    });
+    
+    // Process solo chords
+    tempProcessed = tempProcessed.replace(chordSolo, (match, chord) => {
+      const originalChord = chord;
+      const label = prettyChord(chord);
+      const fingering = DICTS[originalChord] || DICTS[chord] || "";
+      
+      parts.push({
+        type: 'chord-solo',
+        chord: originalChord,
+        label: label,
+        fingering: fingering,
+        original: match
+      });
+      
+      return `__CHORD_SOLO_${parts.length - 1}__`;
+    });
+    
+    return { tempProcessed, parts };
   }, [text, DICTS]);
 
-  // Collect unique chords for legend (as typed, not prettified)
+  // Collect unique chords for legend
   const chordSet = useMemo(() => {
     const safeText = text || "";
-    const matches = Array.from(safeText.matchAll(/\(([A-G](?:#|b)?[a-zA-Z0-9+()\/#]*)\)/g)).map(m => m[1]);
+    const allChordsRegex = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)/g;
+    const matches = Array.from(safeText.matchAll(allChordsRegex)).map(m => m[1]);
     return Array.from(new Set(matches));
   }, [text]);
 
   return (
-    <div>
+    <div className="chord-lyrics-container">
       <style>{`
-        .lyrics { line-height: 1.9; font-size: 1rem; }
-        .chord-ruby { ruby-position: over; }
-        .chord-rt {
-          font-weight: 700;
-          font-size: .85rem;
-          letter-spacing: .02em;
-          opacity: .95;
+        .chord-lyrics-container {
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .lyrics { 
+          line-height: 2.2; 
+          font-size: 1rem; 
+          white-space: pre-wrap;
+          margin-bottom: 2rem;
+        }
+        .chord-ruby { 
           position: relative;
+          display: inline-block;
+        }
+        .chord-rt {
+          position: absolute;
+          top: -1.2em;
+          left: 0;
+          font-weight: 700;
+          font-size: .75rem;
+          color: #2563eb;
           cursor: pointer;
+          white-space: nowrap;
+          z-index: 1;
         }
         .chord-tag {
-          display:inline-block;
-          font-weight:700;
-          font-size:.85rem;
-          padding:.05rem .35rem;
-          border:1px solid currentColor;
-          border-radius:.35rem;
-          margin-right:.35rem;
-          vertical-align:baseline;
-          cursor:pointer;
-          position:relative;
+          display: inline-block;
+          font-weight: 700;
+          font-size: .75rem;
+          padding: .2rem .4rem;
+          background: #eff6ff;
+          color: #2563eb;
+          border: 1px solid #2563eb;
+          border-radius: .25rem;
+          margin-right: .5rem;
+          margin-bottom: .25rem;
+          cursor: pointer;
+          position: relative;
         }
-        /* tooltip */
-        .chord-rt:hover .chord-tip,
-        .chord-tag:hover .chord-tip { display:block; }
-        .chord-tip {
-          display:none;
-          position:absolute;
-          left:50%;
-          transform:translateX(-50%);
-          top:1.6rem;
-          background:#fff;
-          color:#000;
-          border:1px solid #000;
-          border-radius:.5rem;
-          padding:.25rem;
-          z-index:5;
-          box-shadow:0 6px 20px rgba(0,0,0,.15);
-          white-space:nowrap;
+        .chord-tooltip {
+          display: none;
+          position: absolute;
+          top: 100%;
+          left: 50%;
+          transform: translateX(-50%);
+          margin-top: .5rem;
+          background: white;
+          border: 1px solid #d1d5db;
+          border-radius: .5rem;
+          padding: .5rem;
+          box-shadow: 0 10px 25px rgba(0,0,0,.15);
+          z-index: 10;
+          white-space: nowrap;
         }
-        .chord-tip .mount { width:140px; height:160px; display:block; }
+        .chord-rt:hover .chord-tooltip,
+        .chord-tag:hover .chord-tooltip {
+          display: block;
+        }
         .legend {
-          margin-top:1.25rem;
-          display:flex; flex-wrap:wrap; gap:1rem;
-          align-items:flex-start;
+          margin-top: 2rem;
+          padding-top: 2rem;
+          border-top: 1px solid #e5e7eb;
         }
-        .legend-item { display:flex; gap:.5rem; align-items:center; }
-        .legend-item label { font-weight:700; min-width:2.2rem; }
+        .legend h3 {
+          font-size: 1.1rem;
+          font-weight: 700;
+          margin-bottom: 1rem;
+          color: #374151;
+        }
+        .legend-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+          gap: 1.5rem;
+        }
+        .legend-item {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+        }
+        .legend-item .chord-name {
+          font-weight: 700;
+          font-size: .9rem;
+          margin-bottom: .5rem;
+          color: #2563eb;
+        }
       `}</style>
 
-      {/* Lyrics block */}
-      <div className="lyrics" dangerouslySetInnerHTML={{ __html: html }} />
-
-      {/* Tooltips via small enhancer */}
-      <EnhanceTooltips />
-
-      {/* Legend of chords */}
-      {showLegend && (
-        <div className="legend">
-          {chordSet.map(raw => {
-            const label = prettyChord(raw);
-            const fingering = DICTS[raw] || DICTS[label];
+      <div className="lyrics">
+        {processedContent.tempProcessed.split(/(__CHORD_(?:WORD|SOLO)_\d+__)/g).map((part, index) => {
+          const chordWordMatch = part.match(/__CHORD_WORD_(\d+)__/);
+          const chordSoloMatch = part.match(/__CHORD_SOLO_(\d+)__/);
+          
+          if (chordWordMatch) {
+            const partIndex = parseInt(chordWordMatch[1]);
+            const chordPart = processedContent.parts[partIndex];
             return (
-              <div className="legend-item" key={raw}>
-                <label>{label}</label>
-                {fingering ? (
-                  <GuitarChordDiagram label={label} fingering={fingering} />
-                ) : (
-                  <small style={{ opacity: .7 }}>no fingering</small>
-                )}
-              </div>
+              <span key={index} className="chord-ruby">
+                <span className="chord-rt">
+                  {chordPart.label}
+                  {chordPart.fingering && (
+                    <div className="chord-tooltip">
+                      <GuitarChordDiagram 
+                        label={chordPart.label} 
+                        fingering={chordPart.fingering} 
+                        showLabel={false}
+                      />
+                    </div>
+                  )}
+                </span>
+                {chordPart.word}
+              </span>
             );
-          })}
+          }
+          
+          if (chordSoloMatch) {
+            const partIndex = parseInt(chordSoloMatch[1]);
+            const chordPart = processedContent.parts[partIndex];
+            return (
+              <span key={index} className="chord-tag">
+                {chordPart.label}
+                {chordPart.fingering && (
+                  <div className="chord-tooltip">
+                    <GuitarChordDiagram 
+                      label={chordPart.label} 
+                      fingering={chordPart.fingering} 
+                      showLabel={false}
+                    />
+                  </div>
+                )}
+              </span>
+            );
+          }
+          
+          // Regular text - convert line breaks
+          return part.split('\n').map((line, lineIndex, lines) => (
+            <React.Fragment key={`${index}-${lineIndex}`}>
+              {line}
+              {lineIndex < lines.length - 1 && <br />}
+            </React.Fragment>
+          ));
+        })}
+      </div>
+
+      {showLegend && chordSet.length > 0 && (
+        <div className="legend">
+          <h3>Chord Reference</h3>
+          <div className="legend-grid">
+            {chordSet.map(chord => {
+              const label = prettyChord(chord);
+              const fingering = DICTS[chord] || DICTS[label];
+              return (
+                <div className="legend-item" key={chord}>
+                  <div className="chord-name">{label}</div>
+                  {fingering ? (
+                    <GuitarChordDiagram label={label} fingering={fingering} />
+                  ) : (
+                    <div style={{ opacity: 0.6, fontSize: '0.8rem' }}>
+                      Fingering not available
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
       )}
     </div>
   );
-}
-
-/** Adds tooltip diagrams under any element with data-fingering (since inner HTML isn't React-owned) */
-function EnhanceTooltips() {
-  React.useEffect(() => {
-    const addTip = (el) => {
-      if (el.querySelector(".chord-tip")) return;
-      const fingering = el.getAttribute("data-fingering");
-      const chord = el.getAttribute("data-chord") || "";
-      if (!fingering) return;
-
-      const tip = document.createElement("div");
-      tip.className = "chord-tip";
-      const mount = document.createElement("div");
-      mount.className = "mount";
-      tip.appendChild(mount);
-      el.appendChild(tip);
-
-      import("react-dom").then(ReactDOM => {
-        ReactDOM.createRoot(mount).render(
-          <GuitarChordDiagram label={chord} fingering={fingering} />
-        );
-      });
-    };
-
-    const targets = document.querySelectorAll(".chord-rt, .chord-tag");
-    targets.forEach(addTip);
-  }, []);
-  return null;
 }
