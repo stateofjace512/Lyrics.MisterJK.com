@@ -18,7 +18,7 @@ export const DEFAULT_DIAGRAMS = {
   // Enharmonics / flats (typical A-shape barre at 1)
   Bb: { f: "x13331", barre: { fret: 1, start: 1, end: 5 } },  "A#": { f: "x13331", barre: { fret: 1, start: 1, end: 5 } },
   Db: { f: "x46664", barre: { fret: 4, start: 1, end: 5 } },  "C#": { f: "x46664", barre: { fret: 4, start: 1, end: 5 } },
-  Eb: { f: "x65343", barre: { fret: 6, start: 1, end: 5 } },  "D#": { f: "x65343", barre: { fret: 6, start: 1, end: 5 } },
+  Eb: { f: "x65343" }, "D#": { f: "x65343" }, 
   Gb: { f: "244322", barre: { fret: 2, start: 0, end: 5 } },  "F#": { f: "244322", barre: { fret: 2, start: 0, end: 5 } },
   Ab: { f: "466544", barre: { fret: 4, start: 0, end: 5 } },  "G#": { f: "466544", barre: { fret: 4, start: 0, end: 5 } },
   // ---- MINOR ----
