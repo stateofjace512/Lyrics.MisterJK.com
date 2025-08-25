@@ -6,7 +6,7 @@ export default function SantasOnPTO() {
 
 (F)Out of office, red suit's dry cleaned
 (Dm)He left the elves on read and dipped the scene
-(F)Said "I'm tired of letters, give me sand"
+(Bb)Said "I'm tired of letters, give me sand"
 (C)Now he's barefoot with a drink in hand
 (F)Mrs. Claus said "he's been tense"
 (Dm)Now he's shirtless on a beach in France
