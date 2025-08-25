@@ -2,69 +2,77 @@ import React from 'react';
 import SongPage from '../components/SongPage';
 
 export default function AskMama() {
-  const lyrics = `I said I wouldn't call him
+  const lyrics = `(B) (G#m) (E) (F#)
+
+I said I wouldn't (B)call him
 I said I knew the cost
-But now I'm wearin' perfume
+But now I'm wearin' (G#m)perfume
 That smells a little lost
 
-I typed out "you up?" and paused
+I typed out "you up(E)?" and paused
 Heart racin', red alert
-I said I'd never go back
+I said I'd never (F#)go back
 But I've done dumber things in skirts
 
-I could blame the wine
-Or this old T-shirt
-But if I press send
+I could blame the (E)wine
+Or this old (F#)T-shirt
+But if I press (G#m)send
 Someone's gonna get hurt
 
-So I'll ask Mama
-She'll talk me down
-Say, "Baby, if it's love, you don't need to chase it 'round"
-She'll say "You called me last time with the same regret"
-So I'll ask Mama
-Just not yet
+So I'll ask (E)Mama
+She'll talk me (F#)down
+Say, "Baby, if it's (B)love, you don't (F#/Bb)need to chase it '(G#m)round"
+She'll say "You called me (E)last time with the same reg(F#)ret"
+So I'll ask (E)Mama
+(F#)Just not ye(B)t
 
-He said he's changed, of course he did
+(B)
+
+He said he's (B)changed, of course he did
 They always do when you forget
-I got his number in a folder
+I got his (G#m)number in a folder
 Marked "We Don't Text"
 
-But I miss the sound he made
+But I (E)miss the sound he made
 When he said my name half wrong
-Like he never fully got me
+Like he (F#)never fully got me
 But I still played along
 
-Mama said, "The nice ones'll kill you quicker"
-But silence hurts too
+Mama said, "(B)The nice ones'll kill you quicker"
+But silence hurts (G#m)too
 And I'm a slow forgiver
 
-So I'll ask Mama
-If I should reply
-Maybe she'll remind me of the last goodbye
-She'll say, "Did he say sorry or did you just forget?"
-So I'll ask Mama
-Just not yet
+So I'll ask (E)Mama
+If I should (F#)reply
+Maybe she'll rem(B)ind me of the (F#/Bb)last good(G#m)bye
+She'll say, "Did he say (E)sorry or did you just forg(F#)et?"
+So I'll ask (E)Mama
+(F#)Just not yet
 
-Mama said,
-"If you gotta ask me,
-then you already know"
-And she was right
-But knowing ain't the same
-As not wanting to go
+(G#m7) (F#/Bb)
 
-So I asked Mama
-She didn't say much
-Just looked at me with eyes that had enough
-She said, "I won't stop you But I won't pretend"
-"If you go back, baby, don't call me again"
+(B)Mama sai(E)d,
+"If you gotta (B)ask me,
+then (F#)you already know"
+And she was (E)right
+But knowing ain't the (B)same
+As not wanting to (F#)go
 
-So I hung up the phone
-Put down the threat
-And whispered to the ceiling,
-"Not yet"
+So I asked (E)Mama
+She didn't say (F#)much
+Just looked at (G#m7)me with e(B)yes that had enough
+She said, "I won't (E)stop you But I won't pre(F#)tend"
+"If you go back, (G#m)baby, (G#m7)don't call me again"
 
-I'll ask mama, when I'm ready
-To hear what I already know`;
+So (E)I hung up the phone
+(F#)Put down the threat
+And (B)whispered to the ceiling,
+"Not (G#m7)yet"
+
+I'll ask (E)mama, when I'm (F#)ready
+To (B)hear what I already know
+
+(G#m7)`;
 
   const credits = (
     <>
