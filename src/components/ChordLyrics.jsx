@@ -1,149 +1,86 @@
 import React, { useMemo } from "react";
 
 /* ========================= DEFAULT DIAGRAMS =========================
-   Common guitar chord fingerings (open + standard barre).
+   Common guitar chord fingerings with hardcoded barre info.
    Type flats as Bb/Db/etc. Pretty display (B♭, F♯) is handled by prettyChord().
    Override anything by passing a `diagrams` prop (yours win).
 ==================================================================== */
 export const DEFAULT_DIAGRAMS = {
   // ---- MAJOR (open / barre) ----
-  C: "x32010",
-  D: "xx0232",
-  E: "022100",
-  F: "133211",
-  G: "320003",
-  A: "x02220",
-  B: "x24442",
-
-  Bb: "x13331",  "A#": "x13331",
-  Db: "x46664",  "C#": "x46664",
-  Eb: "x65343",  "D#": "x65343",
-  Gb: "244322",  "F#": "244322",
-  Ab: "466544",  "G#": "466544",
-
+  C:  { f: "x32010" },
+  D:  { f: "xx0232" },
+  E:  { f: "022100" },
+  // Common F shape is a 1st-fret full barre
+  F:  { f: "133211", barre: { fret: 1, start: 0, end: 5 } },
+  G:  { f: "320003" },
+  A:  { f: "x02220" },
+  B:  { f: "x24442", barre: { fret: 2, start: 1, end: 5 } },
+  // Enharmonics / flats (typical A-shape barre at 1)
+  Bb: { f: "x13331", barre: { fret: 1, start: 1, end: 5 } },  "A#": { f: "x13331", barre: { fret: 1, start: 1, end: 5 } },
+  Db: { f: "x46664", barre: { fret: 4, start: 1, end: 5 } },  "C#": { f: "x46664", barre: { fret: 4, start: 1, end: 5 } },
+  Eb: { f: "x65343", barre: { fret: 6, start: 1, end: 5 } },  "D#": { f: "x65343", barre: { fret: 6, start: 1, end: 5 } },
+  Gb: { f: "244322", barre: { fret: 2, start: 0, end: 5 } },  "F#": { f: "244322", barre: { fret: 2, start: 0, end: 5 } },
+  Ab: { f: "466544", barre: { fret: 4, start: 0, end: 5 } },  "G#": { f: "466544", barre: { fret: 4, start: 0, end: 5 } },
   // ---- MINOR ----
-  Am: "x02210",
-  Dm: "xx0231",
-  Em: "022000",
-  Fm: "133111",
-  Gm: "355333",
-  Bm: "x24432",
-  Cm: "x35543",
-  Bbm: "x13321", "A#m": "x13321",
-  Dbm: "x46654", "C#m": "x46654",
-  Ebm: "x65343", "D#m": "x65343",
-  Gbm: "244222", "F#m": "244222",
-  Abm: "466444", "G#m": "466444",
-
+  Am:  { f: "x02210" },
+  Dm:  { f: "xx0231" },
+  Em:  { f: "022000" },
+  Fm:  { f: "133111", barre: { fret: 1, start: 0, end: 5 } },
+  Gm:  { f: "355333", barre: { fret: 3, start: 0, end: 5 } },
+  Bm:  { f: "x24432", barre: { fret: 2, start: 1, end: 5 } },
+  Cm:  { f: "x35543", barre: { fret: 3, start: 1, end: 5 } },
+  Bbm: { f: "x13321", barre: { fret: 1, start: 1, end: 5 } }, "A#m": { f: "x13321", barre: { fret: 1, start: 1, end: 5 } },
+  Dbm: { f: "x46654", barre: { fret: 4, start: 1, end: 5 } }, "C#m": { f: "x46654", barre: { fret: 4, start: 1, end: 5 } },
+  Ebm: { f: "x65343", barre: { fret: 6, start: 1, end: 5 } }, "D#m": { f: "x65343", barre: { fret: 6, start: 1, end: 5 } },
+  Gbm: { f: "244222", barre: { fret: 2, start: 0, end: 5 } }, "F#m": { f: "244222", barre: { fret: 2, start: 0, end: 5 } },
+  Abm: { f: "466444", barre: { fret: 4, start: 0, end: 5 } }, "G#m": { f: "466444", barre: { fret: 4, start: 0, end: 5 } },
   // ---- 7ths ----
-  A7: "x02020",
-  B7: "x21202",
-  C7: "x32310",
-  D7: "xx0212",
-  E7: "020100",
-  F7: "131211",
-  G7: "320001",
-  Bb7: "x13131", "A#7": "x13131",
-
+  A7:  { f: "x02020" },
+  B7:  { f: "x21202" },
+  C7:  { f: "x32310" },
+  D7:  { f: "xx0212" },
+  E7:  { f: "020100" },
+  F7:  { f: "131211", barre: { fret: 1, start: 0, end: 5 } },
+  G7:  { f: "320001" },
+  Bb7: { f: "x13131", barre: { fret: 1, start: 1, end: 5 } }, "A#7": { f: "x13131", barre: { fret: 1, start: 1, end: 5 } },
   // ---- m7 / maj7 ----
-  Am7: "x02010",
-  Dm7: "xx0211",
-  Em7: "022030",
-  Cmaj7: "x32000",
-  Gmaj7: "320002",
-  Amaj7: "x02120",
-  Fmaj7: "xx3210",
-  Bbmaj7: "x13231", "A#maj7": "x13231",
-
+  Am7:   { f: "x02010" },
+  Dm7:   { f: "xx0211" },
+  Em7:   { f: "022030" },
+  Cmaj7: { f: "x32000" },
+  Gmaj7: { f: "320002" },
+  Amaj7: { f: "x02120" },
+  Fmaj7: { f: "xx3210" },
+  Bbmaj7:{ f: "x13231", barre: { fret: 1, start: 1, end: 5 } }, "A#maj7": { f: "x13231", barre: { fret: 1, start: 1, end: 5 } },
   // ---- sus / add ----
-  Asus2: "x02200",
-  Asus4: "x02230",
-  Dsus2: "xx0230",
-  Dsus4: "xx0233",
-  Esus4: "022200",
-  Csus2: "x30010",
-  Csus4: "x33011",
-  Gsus4: "330013",
-  Cadd9: "x32033",
-  "F(add9)": "1x3213",
-  "Dsus2/F#": "2x0230",
-
+  Asus2:   { f: "x02200" },
+  Asus4:   { f: "x02230" },
+  Dsus2:   { f: "xx0230" },
+  Dsus4:   { f: "xx0233" },
+  Esus4:   { f: "022200" },
+  Csus2:   { f: "x30010" },
+  Csus4:   { f: "x33011" },
+  Gsus4:   { f: "330013" },
+  Cadd9:   { f: "x32033" },
+  "F(add9)": { f: "1x3213", barre: { fret: 1, start: 0, end: 5 } },
+  "Dsus2/F#": { f: "2x0230" },
   // ---- dim / aug ----
-  Bdim: "x20101",
-  Ddim: "xx0101",
-  Ebdim: "xx1212",
-  Caug: "x32110",
-  Eaug: "032110",
+  Bdim: { f: "x20101" },
+  Ddim: { f: "xx0101" },
+  Ebdim:{ f: "xx1212" },
+  Caug: { f: "x32110" },
+  Eaug: { f: "032110" },
 };
-
-// Helper function to detect barre chords - improved to avoid false positives
-function detectBarrePattern(fingering) {
-  const cols = fingering.trim().split("");
-  const frets = cols.map(c => (/[1-9]/.test(c) ? Number(c) : null));
-  
-  // Don't consider open chord positions as potential barres
-  const nonOpenFrets = frets.filter(f => f !== null && f > 0);
-  if (nonOpenFrets.length === 0) return null;
-  
-  // Find potential barre positions
-  const barreInfo = [];
-  
-  // Check each fret for multiple fingers on the same fret
-  for (let fret = 1; fret <= 12; fret++) {
-    const positions = frets.map((f, i) => f === fret ? i : -1).filter(p => p !== -1);
-    if (positions.length >= 3) { // Require at least 3 strings for a barre (was 2)
-      // Check if positions form a valid barre pattern
-      const sortedPos = positions.sort((a, b) => a - b);
-      let validBarre = true;
-      
-      // For a valid barre, we need consecutive strings or only muted strings in between
-      for (let i = 0; i < sortedPos.length - 1; i++) {
-        let gap = sortedPos[i + 1] - sortedPos[i];
-        if (gap > 1) {
-          // Check if all strings in between are muted (null) or open (0)
-          let allMutedOrOpen = true;
-          for (let j = sortedPos[i] + 1; j < sortedPos[i + 1]; j++) {
-            if (frets[j] !== null && frets[j] !== 0) {
-              allMutedOrOpen = false;
-              break;
-            }
-          }
-          if (!allMutedOrOpen) {
-            validBarre = false;
-            break;
-          }
-        }
-      }
-      
-      // Additional check: make sure it's not just scattered individual notes
-      const span = sortedPos[sortedPos.length - 1] - sortedPos[0];
-      if (validBarre && span >= 2 && positions.length >= 3) {
-        barreInfo.push({
-          fret,
-          startString: Math.min(...positions),
-          endString: Math.max(...positions),
-          positions
-        });
-      }
-    }
-  }
-  
-  // Return the most comprehensive barre (covers most strings)
-  if (barreInfo.length > 0) {
-    return barreInfo.reduce((best, current) => 
-      (current.positions.length > best.positions.length) ? current : best
-    );
-  }
-  
-  return null;
-}
 
 function GuitarChordDiagram({
   label,
-  fingering,
+  chordData,
   strings = 6,
   showLabel = true,
 }) {
+  const fingering = chordData?.f || chordData || "";
+  const barreInfo = chordData?.barre;
+  
   const cols = fingering.trim().split("");
   const usedFrets = cols
     .map(c => (/[1-9]/.test(c) ? Number(c) : null))
@@ -156,9 +93,6 @@ function GuitarChordDiagram({
   const gridW = width - pad * 2, gridH = height - pad * 2 - 30;
   const colW = gridW / (cols.length - 1 || 1);
   const rowH = gridH / rows;
-
-  // Detect barre chord
-  const barrePattern = detectBarrePattern(fingering);
 
   return (
     <svg width={width} height={height} aria-label={`${label} chord`} role="img">
@@ -204,15 +138,15 @@ function GuitarChordDiagram({
         />
       ))}
 
-      {/* Barre line (if detected) */}
-      {barrePattern && (
+      {/* Barre line (if specified) */}
+      {barreInfo && (
         (() => {
-          const fret = barrePattern.fret;
+          const fret = barreInfo.fret;
           const rel = fret - base + 1; // 1..rows
           if (rel >= 1 && rel <= rows) {
             const cy = pad + 30 + rel * rowH - rowH / 2;
-            const startX = pad + barrePattern.startString * colW;
-            const endX = pad + barrePattern.endString * colW;
+            const startX = pad + barreInfo.start * colW;
+            const endX = pad + barreInfo.end * colW;
             return (
               <line
                 key="barre"
@@ -240,8 +174,8 @@ function GuitarChordDiagram({
         const cx = pad + i * colW;
         const cy = pad + 30 + rel * rowH - rowH / 2;
         
-        // Don't draw dots for barre positions, unless they're the only finger on that fret
-        if (barrePattern && barrePattern.fret === fret && barrePattern.positions.length > 1) {
+        // Don't draw dots for barre positions if it's part of a defined barre
+        if (barreInfo && barreInfo.fret === fret && i >= barreInfo.start && i <= barreInfo.end) {
           return null;
         }
         
@@ -287,14 +221,14 @@ export default function ChordLyrics({
     processed = processed.replace(chordWord, (match, chord, word) => {
       const originalChord = chord;
       const label = prettyChord(chord);
-      const fingering = DICTS[originalChord] || DICTS[chord] || "";
+      const chordData = DICTS[originalChord] || DICTS[chord] || "";
       
       parts.push({
         type: 'chord-word',
         chord: originalChord,
         label: label,
         word: word,
-        fingering: fingering,
+        chordData: chordData,
         original: match
       });
       
@@ -313,12 +247,15 @@ export default function ChordLyrics({
       });
     }
     
+    // Count total chord matches to determine spacing behavior
+    const totalChords = chordSoloMatches.length;
+    
     // Process matches in reverse order to maintain indices
     for (let i = chordSoloMatches.length - 1; i >= 0; i--) {
       const matchData = chordSoloMatches[i];
       const originalChord = matchData.chord;
       const label = prettyChord(originalChord);
-      const fingering = DICTS[originalChord] || DICTS[originalChord] || "";
+      const chordData = DICTS[originalChord] || DICTS[originalChord] || "";
       
       // Check if this is part of a sequence of consecutive chords
       const nextMatch = chordSoloMatches[i + 1];
@@ -338,14 +275,18 @@ export default function ChordLyrics({
       const isInChordSequence = isFollowedByChord || isPrecededByChord;
       const isStandalone = (isAtLineStart || isAtLineEnd) && !isFollowedByText;
       
+      // NEW LOGIC: Single standalone chord gets line break, multiple chords stay together
+      const isSingleStandaloneChord = totalChords === 1 && isStandalone && isAtLineStart && isAtLineEnd;
+      
       parts.push({
         type: 'chord-solo',
         chord: originalChord,
         label: label,
-        fingering: fingering,
+        chordData: chordData,
         original: matchData.match,
         isStandalone: isStandalone || isInChordSequence,
-        isInSequence: isInChordSequence
+        isInSequence: isInChordSequence,
+        isSingleStandaloneChord: isSingleStandaloneChord
       });
       
       const replacement = `__CHORD_SOLO_${parts.length - 1}__`;
@@ -412,6 +353,13 @@ export default function ChordLyrics({
           margin-right: .3rem;
           margin-bottom: .25rem;
         }
+        .chord-tag-single-standalone {
+          display: block;
+          width: fit-content;
+          margin-bottom: 1.5rem;
+          margin-top: 1rem;
+          margin-right: 0;
+        }
         .chord-tooltip {
           display: none;
           position: absolute;
@@ -476,11 +424,11 @@ export default function ChordLyrics({
               <span key={index} className="chord-ruby">
                 <span className="chord-rt">
                   {chordPart.label}
-                  {chordPart.fingering && (
+                  {chordPart.chordData && (
                     <div className="chord-tooltip">
                       <GuitarChordDiagram 
                         label={chordPart.label} 
-                        fingering={chordPart.fingering} 
+                        chordData={chordPart.chordData} 
                         showLabel={false}
                       />
                     </div>
@@ -494,19 +442,25 @@ export default function ChordLyrics({
           if (chordSoloMatch) {
             const partIndex = parseInt(chordSoloMatch[1]);
             const chordPart = processedContent.parts[partIndex];
-            const className = chordPart.isInSequence 
-              ? "chord-tag chord-tag-sequence" 
-              : chordPart.isStandalone
-              ? "chord-tag chord-tag-solo"
-              : "chord-tag";
+            
+            // Determine className based on chord context
+            let className = "chord-tag";
+            if (chordPart.isSingleStandaloneChord) {
+              className += " chord-tag-single-standalone";
+            } else if (chordPart.isInSequence) {
+              className += " chord-tag-sequence";
+            } else if (chordPart.isStandalone) {
+              className += " chord-tag-solo";
+            }
+            
             return (
               <span key={index} className={className}>
                 {chordPart.label}
-                {chordPart.fingering && (
+                {chordPart.chordData && (
                   <div className="chord-tooltip">
                     <GuitarChordDiagram 
                       label={chordPart.label} 
-                      fingering={chordPart.fingering} 
+                      chordData={chordPart.chordData} 
                       showLabel={false}
                     />
                   </div>
@@ -531,12 +485,12 @@ export default function ChordLyrics({
           <div className="legend-grid">
             {chordSet.map(chord => {
               const label = prettyChord(chord);
-              const fingering = DICTS[chord] || DICTS[label];
+              const chordData = DICTS[chord] || DICTS[label];
               return (
                 <div className="legend-item" key={chord}>
                   <div className="chord-name">{label}</div>
-                  {fingering ? (
-                    <GuitarChordDiagram label={label} fingering={fingering} />
+                  {chordData ? (
+                    <GuitarChordDiagram label={label} chordData={chordData} />
                   ) : (
                     <div style={{ opacity: 0.6, fontSize: '0.8rem' }}>
                       Fingering not available
