@@ -72,7 +72,7 @@ export const DEFAULT_DIAGRAMS = {
   Eaug: { f: "032110" },
 
   // ---- custom chords ----
-  "F#/Bb": { f: "244322", barre: { fret: 2, start: 0, end: 5 } },
+  "F#/Bb": { f: "6x4322" },
   Gbm7: { f: "242222", barre: { fret: 2, start: 0, end: 5 } }, "F#m7": { f: "242222", barre: { fret: 2, start: 0, end: 5 } },
   Abm7: { f: "464444", barre: { fret: 4, start: 0, end: 5 } }, "G#m7": { f: "464444", barre: { fret: 4, start: 0, end: 5 } },
 
