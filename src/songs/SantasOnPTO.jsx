@@ -39,7 +39,7 @@ He's (Bb)ghosted the Pole and (C)gained control
 Yeah, he's (Dm)on a hammock with a (Am)tan
 Reading fan mail (Dm)from a (Bb)fan 
 (Gm)Tell the elves "don't call, just (Bb)go"
-Santa's on(C) PTO 
+Santa's on (C)PTO 
 
 (F)
 
