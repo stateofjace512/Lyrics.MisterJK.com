@@ -1,6 +1,7 @@
 import React from 'react';
 import Navigation from './Navigation';
 import { ArrowRight, ArrowLeft, ExternalLink } from 'lucide-react';
+import ChordLyrics from "./ChordLyrics";
 
 export default function SongPage({
   title,
@@ -123,13 +124,10 @@ export default function SongPage({
               <h2 className="text-3xl font-bold text-neutral-800 mb-6">Lyrics</h2>
               <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
                 <div className="prose prose-neutral max-w-none">
-                  <div className="whitespace-pre-line text-neutral-700 leading-relaxed text-lg">
-                    {lyrics}
-                  </div>
+                  <ChordLyrics text={lyrics} />
                 </div>
               </div>
             </section>
-
             {/* Credits Section */}
             <section className="mb-8">
               <h2 className="text-3xl font-bold text-neutral-800 mb-6">
