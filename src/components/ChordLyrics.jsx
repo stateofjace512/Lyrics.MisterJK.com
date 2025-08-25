@@ -5,7 +5,7 @@ import React, { useMemo } from "react";
    Type flats as Bb/Db/etc. Pretty display (B♭, F♯) is handled by prettyChord().
    Override anything by passing a `diagrams` prop (yours win).
 ==================================================================== */
-export const DEFAULT_DIAGRAMS: Record<string, string> = {
+export const DEFAULT_DIAGRAMS = {
   // ---- MAJOR (open / barre) ----
   C: "x32010",
   D: "xx0232",
@@ -76,16 +76,15 @@ export const DEFAULT_DIAGRAMS: Record<string, string> = {
   Eaug: "032110",
 };
 
-
 function GuitarChordDiagram({
   label,
   fingering,
   strings = 6,
-}: { label: string; fingering: string; strings?: number }) {
+}) {
   const cols = fingering.trim().split("");
   const usedFrets = cols
     .map(c => (/[1-9]/.test(c) ? Number(c) : null))
-    .filter((n): n is number => n !== null);
+    .filter((n) => n !== null);
 
   const minFret = usedFrets.length ? Math.min(...usedFrets) : 1;
   const base = Math.max(1, Math.min(minFret, 1));
@@ -154,7 +153,7 @@ function GuitarChordDiagram({
 }
 
 /** Pretty display for accidentals (Bb -> B♭; # -> ♯) */
-function prettyChord(chord: string) {
+function prettyChord(chord) {
   return chord.replace(/b/g, "♭").replace(/#/g, "♯");
 }
 
@@ -163,10 +162,6 @@ export default function ChordLyrics({
   text,
   diagrams = {},
   showLegend = true,
-}: {
-  text: string;
-  diagrams?: Record<string, string>;
-  showLegend?: boolean;
 }) {
   // Merge defaults with user overrides (user wins)
   const DICTS = useMemo(() => ({ ...DEFAULT_DIAGRAMS, ...diagrams }), [diagrams]);
@@ -280,10 +275,10 @@ export default function ChordLyrics({
   );
 }
 
-/** Adds tooltip diagrams under any element with data-fingering (since inner HTML isn’t React-owned) */
+/** Adds tooltip diagrams under any element with data-fingering (since inner HTML isn't React-owned) */
 function EnhanceTooltips() {
   React.useEffect(() => {
-    const addTip = (el: Element) => {
+    const addTip = (el) => {
       if (el.querySelector(".chord-tip")) return;
       const fingering = el.getAttribute("data-fingering");
       const chord = el.getAttribute("data-chord") || "";
