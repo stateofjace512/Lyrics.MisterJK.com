@@ -1,5 +1,6 @@
 import React from 'react';
 import SongPage from '../components/SongPage';
+import ChordLyrics from "../components/ChordLyrics";
 
 export default function SantasOnPTO() {
   const lyrics = `(F) (Dm) 
