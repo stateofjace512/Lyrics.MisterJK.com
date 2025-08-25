@@ -96,6 +96,9 @@ function GuitarChordDiagram({
 
   return (
     <svg width={width} height={height} aria-label={`${label} chord`} role="img">
+      {/* Paint a solid background so surrounding text can't show through */}
+      <rect x="0" y="0" width={width} height={height} fill="#fff" />
+   
       {/* Label */}
       {showLabel && (
         <text x={width / 2} y={14} textAnchor="middle" fontWeight="700" fontSize="14">
