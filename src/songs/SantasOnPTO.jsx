@@ -85,6 +85,10 @@ Or your (Dm)lights won't (Bb)glow
       </div>
     </>
   );
+
+  const bpm = 143;
+  const keySig = "F major";
+  const capo = "No capo";
   return (
     <SongPage
       title="Santa's On PTO"
