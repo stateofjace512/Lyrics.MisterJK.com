@@ -191,7 +191,7 @@ function GuitarChordDiagram({
 
       {/* Base fret marker if >1 */}
       {base > 1 && (
-        <text x={pad + gridW + 8} y={pad + 30 + rowH - 4} fontSize="10">{base}fr</text>
+        <text x={pad + gridW + 8} y={pad + 30 + rowH - 4} fontSize="10">{base}</text>
       )}
     </svg>
   );
