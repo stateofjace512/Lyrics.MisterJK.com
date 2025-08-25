@@ -76,6 +76,60 @@ export const DEFAULT_DIAGRAMS = {
   Eaug: "032110",
 };
 
+// Helper function to detect barre chords
+function detectBarrePattern(fingering) {
+  const cols = fingering.trim().split("");
+  const frets = cols.map(c => (/[1-9]/.test(c) ? Number(c) : null));
+  
+  // Find potential barre positions
+  const barreInfo = [];
+  
+  // Check each fret for multiple fingers on the same fret
+  for (let fret = 1; fret <= 12; fret++) {
+    const positions = frets.map((f, i) => f === fret ? i : -1).filter(p => p !== -1);
+    if (positions.length >= 2) {
+      // Check if positions are consecutive (allowing for muted strings)
+      const sortedPos = positions.sort((a, b) => a - b);
+      let consecutive = true;
+      for (let i = 0; i < sortedPos.length - 1; i++) {
+        let gap = sortedPos[i + 1] - sortedPos[i];
+        // Allow gaps only if the strings in between are muted
+        if (gap > 1) {
+          let allMutedBetween = true;
+          for (let j = sortedPos[i] + 1; j < sortedPos[i + 1]; j++) {
+            if (frets[j] !== null) {
+              allMutedBetween = false;
+              break;
+            }
+          }
+          if (!allMutedBetween) {
+            consecutive = false;
+            break;
+          }
+        }
+      }
+      
+      if (consecutive && positions.length >= 2) {
+        barreInfo.push({
+          fret,
+          startString: Math.min(...positions),
+          endString: Math.max(...positions),
+          positions
+        });
+      }
+    }
+  }
+  
+  // Return the most comprehensive barre (covers most strings)
+  if (barreInfo.length > 0) {
+    return barreInfo.reduce((best, current) => 
+      (current.endString - current.startString) > (best.endString - best.startString) ? current : best
+    );
+  }
+  
+  return null;
+}
+
 function GuitarChordDiagram({
   label,
   fingering,
@@ -94,6 +148,9 @@ function GuitarChordDiagram({
   const gridW = width - pad * 2, gridH = height - pad * 2 - 30;
   const colW = gridW / (cols.length - 1 || 1);
   const rowH = gridH / rows;
+
+  // Detect barre chord
+  const barrePattern = detectBarrePattern(fingering);
 
   return (
     <svg width={width} height={height} aria-label={`${label} chord`} role="img">
@@ -139,6 +196,33 @@ function GuitarChordDiagram({
         />
       ))}
 
+      {/* Barre line (if detected) */}
+      {barrePattern && (
+        (() => {
+          const fret = barrePattern.fret;
+          const rel = fret - base + 1; // 1..rows
+          if (rel >= 1 && rel <= rows) {
+            const cy = pad + 30 + rel * rowH - rowH / 2;
+            const startX = pad + barrePattern.startString * colW;
+            const endX = pad + barrePattern.endString * colW;
+            return (
+              <line
+                key="barre"
+                x1={startX}
+                x2={endX}
+                y1={cy}
+                y2={cy}
+                stroke="#000"
+                strokeWidth="6"
+                strokeLinecap="round"
+                opacity="0.7"
+              />
+            );
+          }
+          return null;
+        })()
+      )}
+
       {/* Dots */}
       {cols.map((c, i) => {
         if (!/[1-9]/.test(c)) return null;
@@ -147,6 +231,12 @@ function GuitarChordDiagram({
         if (rel < 1 || rel > rows) return null;
         const cx = pad + i * colW;
         const cy = pad + 30 + rel * rowH - rowH / 2;
+        
+        // Don't draw dots for barre positions, unless they're the only finger on that fret
+        if (barrePattern && barrePattern.fret === fret && barrePattern.positions.length > 1) {
+          return null;
+        }
+        
         return <circle key={`p${i}`} cx={cx} cy={cy} r={7} fill="#000" />;
       })}
 
@@ -174,10 +264,6 @@ export default function ChordLyrics({
 }) {
   // Merge defaults with user overrides (user wins)
   const DICTS = useMemo(() => ({ ...DEFAULT_DIAGRAMS, ...diagrams }), [diagrams]);
-
-  // Enhanced regex to better capture chord variations
-  const chordWord = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)\s*([^\s\(\)]+)/g;
-  const chordSolo = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)(?!\s*[A-Za-z\d])/g;
 
   const processedContent = useMemo(() => {
     const safeText = text || "";
@@ -207,17 +293,18 @@ export default function ChordLyrics({
       return `__CHORD_WORD_${parts.length - 1}__`;
     });
     
-    // Process solo chords - check if they're at start of line or after newline
+    // Process solo chords - improved detection
     processed = processed.replace(chordSolo, (match, chord, offset, fullString) => {
       const originalChord = chord;
       const label = prettyChord(chord);
       const fingering = DICTS[originalChord] || DICTS[chord] || "";
       
-      // Check if this chord is at the start of a line
+      // Check context around the chord
       const beforeChar = offset > 0 ? fullString[offset - 1] : '';
       const afterMatch = fullString.slice(offset + match.length);
       const isStartOfLine = offset === 0 || beforeChar === '\n';
-      const hasTextAfter = /^\s*[A-Za-z]/.test(afterMatch);
+      const isEndOfLine = /^\s*\n/.test(afterMatch) || afterMatch === '';
+      const hasTextAfter = /^\s*[A-Za-z]/.test(afterMatch) && !isEndOfLine;
       
       parts.push({
         type: 'chord-solo',
@@ -226,7 +313,8 @@ export default function ChordLyrics({
         fingering: fingering,
         original: match,
         isStartOfLine: isStartOfLine,
-        hasTextAfter: hasTextAfter
+        hasTextAfter: hasTextAfter,
+        isStandalone: isStartOfLine || isEndOfLine || /^\s+/.test(afterMatch)
       });
       
       return `__CHORD_SOLO_${parts.length - 1}__`;
@@ -287,8 +375,8 @@ export default function ChordLyrics({
         .chord-tag-solo {
           display: block;
           width: fit-content;
-          margin-bottom: .75rem;
-          margin-top: .5rem;
+          margin-bottom: 1.25rem;
+          margin-top: 1rem;
         }
         .chord-tooltip {
           display: none;
@@ -302,7 +390,7 @@ export default function ChordLyrics({
           border-radius: .5rem;
           padding: .5rem;
           box-shadow: 0 10px 25px rgba(0,0,0,.15);
-          z-index: 1000;
+          z-index: 9999;
           white-space: nowrap;
         }
         .chord-rt:hover .chord-tooltip,
@@ -313,6 +401,8 @@ export default function ChordLyrics({
           margin-top: 2rem;
           padding-top: 2rem;
           border-top: 1px solid #e5e7eb;
+          position: relative;
+          z-index: 1;
         }
         .legend h3 {
           font-size: 1.1rem;
@@ -369,7 +459,7 @@ export default function ChordLyrics({
           if (chordSoloMatch) {
             const partIndex = parseInt(chordSoloMatch[1]);
             const chordPart = processedContent.parts[partIndex];
-            const className = chordPart.isStartOfLine && chordPart.hasTextAfter 
+            const className = chordPart.isStandalone 
               ? "chord-tag chord-tag-solo" 
               : "chord-tag";
             return (
