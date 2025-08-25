@@ -216,8 +216,19 @@ export default function ChordLyrics({
 
 // Modes: "lyrics-only", "inline", "full"
 if (mode === "lyrics-only") {
-  return <div className="lyrics">{text.replace(/\([^)]*\)/g, "")}</div>;
+  const textWithoutChords = text.replace(/\([^)]*\)/g, "");
+  return (
+    <div className="lyrics">
+      {textWithoutChords.split("\n").map((line, i, arr) => (
+        <React.Fragment key={i}>
+          {line}
+          {i < arr.length - 1 && <br />}
+        </React.Fragment>
+      ))}
+    </div>
+  );
 }
+
 
 if (mode === "inline") {
   return <div className="lyrics">{text}</div>;
