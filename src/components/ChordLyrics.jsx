@@ -322,7 +322,6 @@ export default function ChordLyrics({
     <div className="chord-lyrics-container">
       <style>{`
          .chord-lyrics-container {
-           font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
          }
          
          .lyrics { 
@@ -527,7 +526,11 @@ export default function ChordLyrics({
                 <div className="legend-item" key={chord}>
                   <div className="chord-name">{label}</div>
                   {chordData ? (
-                    <GuitarChordDiagram label={label} chordData={chordData} />
+                     <GuitarChordDiagram 
+                       label={label} 
+                       chordData={chordData} 
+                       showLabel={false}
+                     />
                   ) : (
                     <div style={{ opacity: 0.6, fontSize: '0.8rem' }}>
                       Fingering not available
