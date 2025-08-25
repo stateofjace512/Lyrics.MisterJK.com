@@ -19,6 +19,7 @@ export default function SongPage({
   capo,
 }) {
   const [mode, setMode] = useState("lyrics-only"); // 👈 default mode
+  const hasChords = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)/.test(lyrics);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -138,12 +139,16 @@ export default function SongPage({
             <section className="mb-12">
               <div className="flex justify-between items-center mb-6">
                 <h2 className="text-3xl font-bold text-neutral-800">Lyrics</h2>
-                <button
-                  onClick={() => setMode(mode === "full" ? "lyrics-only" : "full")}
-                  className="px-3 py-1 text-sm font-semibold border border-neutral-300 rounded-md bg-white shadow-sm hover:bg-neutral-100 transition"
-                >
-                  {mode === "full" ? "Hide Chords" : "Chords (NEW!)"}
-                </button>
+            
+                {/* ✅ only show if chords exist */}
+                {hasChords && (
+                  <button
+                    onClick={() => setMode(mode === "full" ? "lyrics-only" : "full")}
+                    className="px-3 py-1 text-sm font-semibold border border-neutral-300 rounded-md bg-white shadow-sm hover:bg-neutral-100 transition"
+                  >
+                    {mode === "full" ? "Hide Chords" : "Chords (NEW!)"}
+                  </button>
+                )}
               </div>
 
               <div className="rounded-xl border border-neutral-200 bg-neutral-50 px-6 py-8 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
