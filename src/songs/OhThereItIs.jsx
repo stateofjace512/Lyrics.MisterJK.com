@@ -99,6 +99,9 @@ Oh, there I a(Gm)m
       </div>
     </>
   );
+  const bpm = 100;
+  const keySig = "Em - B♭ major";
+  const capo = "No capo";
 
   return (
     <SongPage
@@ -112,6 +115,9 @@ Oh, there I a(Gm)m
       coverImage="https://s3.amazonaws.com/gather.fandalism.com/800x800%2D9759764%2D%2D0C6CDD92%2D888F%2D4153%2D8D22A7371C7CA986%2D%2D0%2D%2D6081121%2D%2Dedit5%2Ejpg"
       albumSlug="the-nice-girls-diamond-edition"
       isAlbumTrack={true}
+      bpm={bpm} 
+      keySig={keySig} 
+      capo={capo}  
     />
   );
 }
