@@ -161,9 +161,10 @@ function prettyChord(chord) {
   return s.replace(/b/g, "♭").replace(/#/g, "♯");
 }
 
+
 /** Main renderer: turns "(F)Word" into ruby with hoverable chord diagram. */
 export default function ChordLyrics({
-  text,
+  text = "", // Default to empty string
   diagrams = {},
   showLegend = true,
 }) {
@@ -175,7 +176,10 @@ export default function ChordLyrics({
   const chordSolo = /\(([A-G](?:#|b)?[a-zA-Z0-9+()\/#]*)\)(?!\s*[A-Za-z])/g;
 
   const html = useMemo(() => {
-    return text
+    // Defensive check for text
+    const safeText = text || "";
+    
+    return safeText
       .replace(chordWord, (_m, ch, word) => {
         const label = prettyChord(ch);
         const fing = DICTS[ch] || DICTS[label] || "";
@@ -193,7 +197,8 @@ export default function ChordLyrics({
 
   // Collect unique chords for legend (as typed, not prettified)
   const chordSet = useMemo(() => {
-    const matches = Array.from(text.matchAll(/\(([A-G](?:#|b)?[a-zA-Z0-9+()\/#]*)\)/g)).map(m => m[1]);
+    const safeText = text || "";
+    const matches = Array.from(safeText.matchAll(/\(([A-G](?:#|b)?[a-zA-Z0-9+()\/#]*)\)/g)).map(m => m[1]);
     return Array.from(new Set(matches));
   }, [text]);
 
