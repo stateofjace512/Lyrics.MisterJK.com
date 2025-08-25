@@ -216,7 +216,15 @@ export default function ChordLyrics({
 
 // Modes: "lyrics-only", "inline", "full"
 if (mode === "lyrics-only") {
-  const textWithoutChords = text.replace(/\([^)]*\)/g, "");
+  // Regex to match only chords, not arbitrary parentheses like (ooh)
+  const chordRegex = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)/g;
+
+  // Remove chords
+  let textWithoutChords = text.replace(chordRegex, "");
+
+  // Collapse 2+ consecutive newlines into just 1
+  textWithoutChords = textWithoutChords.replace(/\n{2,}/g, "\n");
+
   return (
     <div className="lyrics">
       {textWithoutChords.split("\n").map((line, i, arr) => (
@@ -228,6 +236,7 @@ if (mode === "lyrics-only") {
     </div>
   );
 }
+
 
 
 if (mode === "inline") {
