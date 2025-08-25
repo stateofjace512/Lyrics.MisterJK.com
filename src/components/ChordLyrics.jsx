@@ -215,8 +215,8 @@ export default function ChordLyrics({
     let processed = safeText;
     
     // Enhanced regex to better capture chord variations
-    const chordWord = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)\s*([^\s\(\)\n]+)/g;
-    const chordSolo = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)(?!\s*[A-Za-z\d])/g;
+    const chordWord = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)[ \t]*([^\s()\n]+)/g;
+    const chordSolo = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)[ \t]*([^\s()\n]+)/g;
     
     const parts = [];
     
