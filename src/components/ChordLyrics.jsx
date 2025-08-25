@@ -299,13 +299,24 @@ export default function ChordLyrics({
     return { processed, parts };
   }, [text, DICTS]);
 
-  // Collect unique chords for legend
-  const chordSet = useMemo(() => {
-    const safeText = text || "";
-    const allChordsRegex = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)/g;
-    const matches = Array.from(safeText.matchAll(allChordsRegex)).map(m => m[1]);
-    return Array.from(new Set(matches));
-  }, [text]);
+   // Collect unique chords for legend
+   const chordSet = useMemo(() => {
+     const safeText = text || "";
+     const allChordsRegex = /\(([A-G](?:#|b|♯|♭)?(?:m|maj|min|sus|add|dim|aug|\d)*(?:\/[A-G](?:#|b|♯|♭)?)?)\)/g;
+     const matches = Array.from(safeText.matchAll(allChordsRegex)).map(m => m[1]);
+   
+     // Normalize: convert pretty chars to plain form so Bb and B♭ collapse
+     const normalize = (chord) => chord.replace(/♭/g, "b").replace(/♯/g, "#");
+   
+     const unique = new Map();
+     for (const chord of matches) {
+       const norm = normalize(chord);
+       if (!unique.has(norm)) unique.set(norm, chord);
+     }
+   
+     return Array.from(unique.values());
+   }, [text]);
+
 
   return (
     <div className="chord-lyrics-container">
