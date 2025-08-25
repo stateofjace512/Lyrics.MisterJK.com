@@ -87,8 +87,14 @@ function GuitarChordDiagram({
     .filter((n) => n !== null);
 
   const minFret = usedFrets.length ? Math.min(...usedFrets) : 1;
-  const base = Math.max(1, Math.min(minFret, 1));
-  const rows = 4; // show 4 frets
+  const maxFret = usedFrets.length ? Math.max(...usedFrets) : 1;
+
+  // Base fret = lowest used fret, but never less than 1
+  const base = Math.max(1, minFret);
+
+  // Dynamic rows: always show at least 4 frets, expand if chord spans more
+  const rows = Math.max(4, maxFret - base + 1);
+
   const width = 120, height = 150, pad = 16;
   const gridW = width - pad * 2, gridH = height - pad * 2 - 30;
   const colW = gridW / (cols.length - 1 || 1);
@@ -142,31 +148,29 @@ function GuitarChordDiagram({
       ))}
 
       {/* Barre line (if specified) */}
-      {barreInfo && (
-        (() => {
-          const fret = barreInfo.fret;
-          const rel = fret - base + 1; // 1..rows
-          if (rel >= 1 && rel <= rows) {
-            const cy = pad + 30 + rel * rowH - rowH / 2;
-            const startX = pad + barreInfo.start * colW;
-            const endX = pad + barreInfo.end * colW;
-            return (
-              <line
-                key="barre"
-                x1={startX}
-                x2={endX}
-                y1={cy}
-                y2={cy}
-                stroke="#000"
-                strokeWidth="6"
-                strokeLinecap="round"
-                opacity="0.7"
-              />
-            );
-          }
-          return null;
-        })()
-      )}
+      {barreInfo && (() => {
+        const fret = barreInfo.fret;
+        const rel = fret - base + 1; // 1..rows
+        if (rel >= 1 && rel <= rows) {
+          const cy = pad + 30 + rel * rowH - rowH / 2;
+          const startX = pad + barreInfo.start * colW;
+          const endX = pad + barreInfo.end * colW;
+          return (
+            <line
+              key="barre"
+              x1={startX}
+              x2={endX}
+              y1={cy}
+              y2={cy}
+              stroke="#000"
+              strokeWidth="6"
+              strokeLinecap="round"
+              opacity="0.7"
+            />
+          );
+        }
+        return null;
+      })()}
 
       {/* Dots */}
       {cols.map((c, i) => {
@@ -176,12 +180,12 @@ function GuitarChordDiagram({
         if (rel < 1 || rel > rows) return null;
         const cx = pad + i * colW;
         const cy = pad + 30 + rel * rowH - rowH / 2;
-        
+
         // Don't draw dots for barre positions if it's part of a defined barre
         if (barreInfo && barreInfo.fret === fret && i >= barreInfo.start && i <= barreInfo.end) {
           return null;
         }
-        
+
         return <circle key={`p${i}`} cx={cx} cy={cy} r={7} fill="#000" />;
       })}
 
@@ -192,6 +196,7 @@ function GuitarChordDiagram({
     </svg>
   );
 }
+
 
 /** Pretty display for accidentals (Bb -> B♭; # -> ♯) */
 function prettyChord(chord) {
