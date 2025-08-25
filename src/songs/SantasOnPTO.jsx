@@ -98,6 +98,9 @@ Or your (Dm)lights won't (Bb)glow
       credits={credits}
       listenUrl="https://www.youtube.com/watch?v=Lh1CxSsQRVI&list=OLAK5uy_nHYB7FsLDcL7XxNrqNoJAgmcdyUrJmhbk"
       coverImage="https://s3.amazonaws.com/gather.fandalism.com/800x800%2D9759764%2D%2D1DC9FD7B%2D1509%2D4336%2D9FEDBC965141046C%2D%2D0%2D%2D3926753%2D%2DHAHHAHA%2Ejpg"
+      bpm={bpm} 
+      keySig={keySig} 
+      capo={capo}  
     />
   );
 }
